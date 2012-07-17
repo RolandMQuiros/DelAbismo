@@ -8,10 +8,12 @@
 #include <memory>
 
 namespace da {
+
 typedef std::shared_ptr<sf::Font> FontPtr;
 typedef std::shared_ptr<sf::Image> ImagePtr;
 typedef std::shared_ptr<sf::SoundBuffer> SoundBufferPtr;
 typedef std::shared_ptr<sf::Texture> TexturePtr;
+    
 }
 
 #endif

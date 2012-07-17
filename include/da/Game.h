@@ -21,7 +21,7 @@ namespace da {
 class Game : public sf::RenderWindow {
 public:
     /**Content management system */
-    ContentManager Content;
+    ContentManager content;
     
     /**Create a Game with default settings*/
     Game();

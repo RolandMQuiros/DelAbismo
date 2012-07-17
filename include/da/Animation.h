@@ -7,7 +7,6 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Transformable.hpp>
-
 #include <SFML/System/Time.hpp>
 
 #include "da/ContentTypes.h"
@@ -34,6 +33,11 @@ public:
      * @param texture texture
      */
     void setTexture(TexturePtr texture);
+    
+    /** Returns this Animation's texture
+     * @return this Animation's texture
+     */
+    TexturePtr getTexture() const;
 
     /** Adds a frame to the animation.
      * A frame is a sub-rectangle of the texture.
@@ -142,7 +146,8 @@ public:
      * @param deltaTime time between updates, in seconds
      */
     void update(const sf::Time &deltaTime);
-
+    
+    
 private:
     struct Frame {
         sf::IntRect rectangle;

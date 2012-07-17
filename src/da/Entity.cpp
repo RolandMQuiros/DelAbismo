@@ -2,6 +2,14 @@
 
 namespace da {
 
+Entity::Exception::Exception(const std::string &where,
+                             unsigned long line,
+                             const std::string &source,
+                             const std::string &what) :
+DAException(where, line, source, what) {
+    
+}
+    
 Entity::Entity(unsigned int id) :
 mvId(id),
 mvActive(true) {

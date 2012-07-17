@@ -1,5 +1,8 @@
 #include <SFML/Graphics/RenderTarget.hpp>
+
 #include "da/Animation.h"
+#include "da/Helper.h"
+#include "rapidxml/rapidxml.hpp"
 
 namespace da {
     
@@ -45,6 +48,10 @@ Animation &Animation::operator=(Animation const &other) {
 void Animation::setTexture(TexturePtr texture) {
     mvTexture = texture;
     mvSprite.setTexture(*mvTexture);
+}
+
+TexturePtr Animation::getTexture() const {
+    return mvTexture;
 }
 
 void Animation::addFrame(sf::IntRect const &rect, sf::RenderStates states,

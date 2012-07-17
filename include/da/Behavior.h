@@ -27,7 +27,13 @@ public:
     void update(const sf::Time &deltaTime);
 protected:
     virtual bool isCompatible(const Entity &entity) const;
+    
+    virtual void addedEntity(Entity &entity) const;
+    virtual void removedEntity(Entity &entity) const;
+    
+    virtual void begin(const sf::Time &deltaTime);
     virtual void updateEntity(const sf::Time &deltaTime, Entity &entity);
+    virtual void end(const sf::Time &deltaTime);
     
 private:
     typedef std::unordered_map<unsigned int, unsigned int>::iterator SearchIter;

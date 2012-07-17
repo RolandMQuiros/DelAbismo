@@ -27,8 +27,10 @@ void Behavior::refreshEntity(const EntityRef &entity) {
     
     if (contains && !compatible) {
         mvRemoved.push(search->second);
+        removedEntity(*entity.lock());
     } else if (!contains && compatible) {
         mvAdded.push(entity);
+        addedEntity(*entity.lock());
     }
 }
 
@@ -68,6 +70,8 @@ void Behavior::update(const sf::Time &deltaTime) {
         mvRemoved.pop();
     }
     
+    begin(deltaTime);
+    
     if (mvIsActive) {
         for (unsigned int i = 0; i < mvActiveEntities.size(); i++) {
             EntityRef &entity = mvActiveEntities[i];
@@ -78,14 +82,24 @@ void Behavior::update(const sf::Time &deltaTime) {
             }
         }
     }
+    
+    end(deltaTime);
 }
 
 bool Behavior::isCompatible(const Entity &entity) const {
     return false;
 }
 
+void Behavior::begin(const sf::Time &deltaTime) {
+    
+}
+
 void Behavior::updateEntity(const sf::Time &deltaTime, Entity &entity) {
     
 }
+
+void Behavior::end(const sf::Time &deltaTime) {
     
+}
+
 }

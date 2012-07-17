@@ -84,8 +84,8 @@ public:
     typedef std::map<std::string, std::string>::iterator PropertyIter;
     
     MapReader();
-    MapReader(const std::string &fileName);
-    void loadFromFile(const std::string &fileName);
+    MapReader(const std::string &filename);
+    void loadFromFile(const std::string &filename);
     
     struct Exception : public DAException {
         Exception(const std::string &where, unsigned long line,

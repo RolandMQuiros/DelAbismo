@@ -2,9 +2,11 @@
 #define DA_ENTITY_H
 
 #include <memory>
+#include <sstream>
 #include <unordered_map>
 
 #include "da/Attribute.h"
+#include "da/DAException.h"
 
 namespace da {
 
@@ -14,6 +16,11 @@ private:
                                std::hash<const std::string &>> AttributeMap;
 public:
     typedef AttributeMap::const_iterator Iterator;
+    
+    struct Exception : public DAException {
+        Exception(const std::string &where, unsigned long line,
+                  const std::string &source, const std::string &what);
+    };
     
     Entity(unsigned int id);
     
@@ -28,7 +35,16 @@ public:
     void removeAttribute(const AttributePtr &attribute);
     void removeAttribute(const AttributeRef &attribute);
     
-    template <class T> std::weak_ptr<T> getAttribute() const {
+    template <class T> bool hasAttribute() const {
+        Iterator iter = mvAttributes.find(T::TypeName);
+        bool ret = iter != mvAttributes.end() &&
+                   iter->second;
+        
+        return ret;
+    }
+    
+    // never throws
+    template <class T> std::weak_ptr<T> getAttributeRef() const {
         Iterator iter = mvAttributes.find(T::TypeName);
         std::weak_ptr<T> ret;
         
@@ -37,6 +53,23 @@ public:
         }
         
         return ret;
+    }
+    
+    // throws when search fails
+    template <class T> T &getAttribute() const {
+        Iterator iter = mvAttributes.find(T::TypeName);
+        
+        if (iter != mvAttributes.end()) {
+            return *std::static_pointer_cast<T>(iter->second);
+        }
+        
+        std::stringstream err;
+        
+        err << "Entity (id = " << getId() << ") does not contain "
+            << T::TypeName << " attribute";
+        
+        throw Exception(__RELFILE__, __LINE__,
+                        "Entity::getAttribute<T>() const", err.str());
     }
     
     Iterator getIterator() const;

@@ -28,6 +28,8 @@ T stringConvert(const std::string& str) {
 std::vector<std::string> tokenize(const std::string &string,
                                   const std::string &delimiters);
 
+std::string getFileText(const std::string &filename);
+
 }
 
 

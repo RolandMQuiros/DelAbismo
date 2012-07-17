@@ -1,3 +1,4 @@
+#include <fstream>
 #include "da/Helper.h"
 
 namespace da {
@@ -15,6 +16,22 @@ std::vector<std::string> tokenize(const std::string &string,
         token = string.substr(start, end-start);
         ret.push_back(token);
         start = end + 1;
+    }
+    
+    return ret;
+}
+
+std::string getFileText(const std::string &filename) {
+    std::string ret;
+    std::ifstream ifs(filename);
+    
+    if (ifs.is_open()) {
+        ifs.seekg(0, std::ios::end);
+        ret.reserve((unsigned long int)ifs.tellg());
+        ifs.seekg(0, std::ios::beg);
+        ret.assign((std::istreambuf_iterator<char>(ifs)),
+                    std::istreambuf_iterator<char>());
+        ifs.close();
     }
     
     return ret;

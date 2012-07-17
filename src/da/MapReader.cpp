@@ -1,33 +1,13 @@
 #include <cstring>
-#include <iostream>
-#include <fstream>
 
 #include "da/MapReader.h"
 #include "da/Helper.h"
 #include "da/TileRect.h"
 #include "da/XmlExceptions.h"
+#include "da/XmlHelper.h"
 #include "da/NotImplementedException.h"
 
 namespace da {
-
-std::string GetAttribute(rapidxml::xml_node<> *node,
-                         const std::string &attributeName) {
-    std::string ret;
-    rapidxml::xml_attribute<> *attr;
-    
-    if (node == NULL) {
-        return ret;
-    }
-    
-    if ((attr = node->first_attribute(attributeName.c_str())) == NULL) {
-        throw NoSuchAttributeXmlException(
-            __FILE__, __LINE__, "GetAttribute(xml_node<> *, const string &)",
-             node->name(), attributeName
-        );
-    }
-    
-    return attr->value();
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -43,8 +23,8 @@ void MapProperties::loadProperties(rapidxml::xml_node<> *node) {
             continue;
         }
         
-        std::string name = GetAttribute(tnode, "name");
-        std:: string value = GetAttribute(tnode, "value");
+        std::string name = getXmlAttribute(tnode, "name");
+        std:: string value = getXmlAttribute(tnode, "value");
         
         Properties[name] = value;
     }    
@@ -58,16 +38,16 @@ MapReader::Object::Object(rapidxml::xml_node<> *node) try {
     std::string exsource("MapReader::Object::Object(xml_node<> *)");
     
     // Load Object name
-    Name = GetAttribute(node, "name");
+    Name = getXmlAttribute(node, "name");
     
     // Get Object Type
-    Type = GetAttribute(node, "type");
+    Type = getXmlAttribute(node, "type");
     
     // Get Object x-coordinate
-    Rect.left = stringConvert<float>(GetAttribute(node, "x"));
+    Rect.left = stringConvert<float>(getXmlAttribute(node, "x"));
     
     // Get Object y-coordinate
-    Rect.top = stringConvert<float>(GetAttribute(node, "y"));
+    Rect.top = stringConvert<float>(getXmlAttribute(node, "y"));
     
     // Get Object polyline points, if they exist
     std::string points;
@@ -109,19 +89,19 @@ MapReader::Layer::Layer(rapidxml::xml_node<> *node) try {
     std::string exsource("MapReader::Layer::Layer(xml_node<> *)");
     std::string tmp;
 
-    Name = GetAttribute(node, "name");
-    WidthInTiles = stringConvert<float>(GetAttribute(node, "width"));
-    HeightInTiles = stringConvert<float>(GetAttribute(node, "height"));
+    Name = getXmlAttribute(node, "name");
+    WidthInTiles = stringConvert<float>(getXmlAttribute(node, "width"));
+    HeightInTiles = stringConvert<float>(getXmlAttribute(node, "height"));
     
     try {
-        Opacity = stringConvert<float>(GetAttribute(node, "opacity"));
+        Opacity = stringConvert<float>(getXmlAttribute(node, "opacity"));
     } catch (DAException &e) {
         // Opacity is optional
         Opacity = 1.f;
     }
     
     try {
-        Visible = stringConvert<bool>(GetAttribute(node, "visible"));
+        Visible = stringConvert<bool>(getXmlAttribute(node, "visible"));
     } catch (DAException &e) {
         // Visibility is optional
         Visible = true;
@@ -134,7 +114,7 @@ MapReader::Layer::Layer(rapidxml::xml_node<> *node) try {
     }
     
     // Get tile data
-    std::string encoding = GetAttribute(tnode, "encoding");
+    std::string encoding = getXmlAttribute(tnode, "encoding");
     if (encoding == "csv") {
         std::string data(tnode->value());
         std::vector<std::string> tokens = tokenize(data, ",");
@@ -167,22 +147,22 @@ MapReader::ObjectGroup::ObjectGroup() {
 MapReader::ObjectGroup::ObjectGroup(rapidxml::xml_node<> *node) try {    
     std::string tmp;
     
-    Name = GetAttribute(node, "name");
+    Name = getXmlAttribute(node, "name");
     
-    tmp = GetAttribute(node, "width");
+    tmp = getXmlAttribute(node, "width");
     WidthInTiles = stringConvert<unsigned int>(tmp);
-    tmp = GetAttribute(node, "height");
+    tmp = getXmlAttribute(node, "height");
     HeightInTiles = stringConvert<unsigned int>(tmp);
     
     try {
-        Opacity = stringConvert<float>(GetAttribute(node, "opacity"));
+        Opacity = stringConvert<float>(getXmlAttribute(node, "opacity"));
     } catch (XmlException &e) {
         // Opacity is optional
         Opacity = 1.f;
     }
     
     try {
-        Visible = stringConvert<bool>(GetAttribute(node, "visible"));
+        Visible = stringConvert<bool>(getXmlAttribute(node, "visible"));
     } catch (DAException &e) {
         // Visibility is optional
         Visible = true;
@@ -204,16 +184,16 @@ MapReader::TileSet::TileSet() {
 }
 
 MapReader::TileSet::TileSet(rapidxml::xml_node<> *node) try {
-    Name = GetAttribute(node, "name");
-    FirstGid = stringConvert<unsigned int>(GetAttribute(node, "firstgid"));
-    TileWidth = stringConvert<unsigned int>(GetAttribute(node, "tilewidth"));
-    TileHeight = stringConvert<unsigned int>(GetAttribute(node, "tileheight"));
+    Name = getXmlAttribute(node, "name");
+    FirstGid = stringConvert<unsigned int>(getXmlAttribute(node, "firstgid"));
+    TileWidth = stringConvert<unsigned int>(getXmlAttribute(node, "tilewidth"));
+    TileHeight = stringConvert<unsigned int>(getXmlAttribute(node, "tileheight"));
     
     for (rapidxml::xml_node<> *tnode = node->first_node(); tnode;
          tnode = tnode->next_sibling()) {
         std::string nodeName = tnode->name();
         if (nodeName == "image") {
-            ImageSource = GetAttribute(tnode, "source");
+            ImageSource = getXmlAttribute(tnode, "source");
         }
     }
 } catch (DAException &e) {
@@ -228,36 +208,26 @@ MapReader::TileSet::TileSet(rapidxml::xml_node<> *node) try {
 MapReader::MapReader() {
 }
 
-MapReader::MapReader(const std::string &fileName) try {
-    loadFromFile(fileName);
+MapReader::MapReader(const std::string &filename) try {
+    loadFromFile(filename);
 } catch (DAException &e) {
     DAException except(__FILE__, __LINE__,
                        "MapReader::MapReader(const string&)",
-                       "Error parsing Map file " + fileName);
+                       "Error parsing Map file " + filename);
     e.pushMessage(except);
     throw e;
 }
 
-void MapReader::loadFromFile(const std::string &fileName) {
+void MapReader::loadFromFile(const std::string &filename) {
     std::string exsource("MapReader::OpenFromFile");
     rapidxml::xml_document<> doc;
     rapidxml::xml_node<> *node;
-    std::ifstream ifs(fileName.c_str());
     
-    if (!ifs.is_open()) {
+    std::string xmlText = getFileText(filename);
+    if (xmlText.empty()) {
         throw Exception(__FILE__, __LINE__, exsource, "Problem opening file " +
-                        fileName);
+                        filename);
     }
-    
-    std::string xmlText;
-    
-    // Load XML file text into memory
-    ifs.seekg(0, std::ios::end);
-    xmlText.reserve((unsigned long int)ifs.tellg());
-    ifs.seekg(0, std::ios::beg);
-    xmlText.assign((std::istreambuf_iterator<char>(ifs)),
-                    std::istreambuf_iterator<char>());
-    ifs.close();
     
     try {
         // Parse XML document into DOM
@@ -269,17 +239,17 @@ void MapReader::loadFromFile(const std::string &fileName) {
     }
     
     if (node == NULL && strcmp(node->name(), "map") != 0) {
-        throw Exception(__FILE__, __LINE__, exsource, "Map " + fileName +
+        throw Exception(__FILE__, __LINE__, exsource, "Map " + filename +
                         " is missing or malformed");
     }
     
     try {
         TileWidth = stringConvert<unsigned int>(
-            GetAttribute(node,"tilewidth")
+            getXmlAttribute(node,"tilewidth")
         );
         
         TileHeight = stringConvert<unsigned int>(
-            GetAttribute(node, "tileheight")
+            getXmlAttribute(node, "tileheight")
         );
         
         for (node = node->first_node(); node; node = node->next_sibling()) {
@@ -299,7 +269,7 @@ void MapReader::loadFromFile(const std::string &fileName) {
         }
     } catch (DAException &e) {
         Exception except(__FILE__, __LINE__, exsource, "Error loading map " +
-                         fileName);
+                         filename);
         except.pushMessage(e);
         
         throw except;
