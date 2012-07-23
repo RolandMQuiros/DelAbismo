@@ -62,29 +62,31 @@ int Game::run() {
         sf::Event event;
         while (pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
-                close();
+                close();                
             }
         }
         
-        mvFrameTime = mvFrameClock.restart();
-        
-        std::deque<StatePtr>::iterator iter;
-        for (iter = mvStates.begin(); iter != mvStates.end(); iter++) {
-            try {
-                (*iter)->update();
-                if (!mvStates.empty()) {
-                    clear();
-                    (*iter)->draw();
-                    display();
+        if (isOpen()) {
+            mvFrameTime = mvFrameClock.restart();
+            
+            std::deque<StatePtr>::iterator iter;
+            for (iter = mvStates.begin(); iter != mvStates.end(); iter++) {
+                try {
+                    (*iter)->update();
+                    if (!mvStates.empty()) {
+                        clear();
+                        (*iter)->draw();
+                        display();
+                    }
+                } catch (DAException &e) {
+                    // If an exception manages to propagate to this level of
+                    // operation, we can assume it's pretty severe and we'll
+                    // just let ourselves crash.
+                    std::cerr << e.message();
+                    close();
+                    
+                    return EXIT_FAILURE;
                 }
-            } catch (DAException &e) {
-                // If an exception manages to propagate to this level of
-                // operation, we can assume it's pretty severe and we'll just
-                // let ourselves crash.
-                std::cerr << e.message();
-                close();
-                
-                return EXIT_FAILURE;
             }
         }
     }

@@ -90,6 +90,14 @@ bool Behavior::isCompatible(const Entity &entity) const {
     return false;
 }
 
+void Behavior::addedEntity(Entity &entity) {
+    
+}
+
+void Behavior::removedEntity(Entity &entity) {
+    
+}
+
 void Behavior::begin(const sf::Time &deltaTime) {
     
 }

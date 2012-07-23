@@ -38,6 +38,10 @@ void Entity::addAttribute(const AttributePtr &attribute) {
     }
 }
 
+void Entity::addAttribute(Attribute *attribute) {
+    addAttribute(AttributePtr(attribute));
+}
+
 void Entity::removeAttribute(const AttributePtr &attribute) {
     AttributeMap::iterator iter = mvAttributes.find(attribute->getTypeName());
     

@@ -8,6 +8,8 @@
 namespace sim {
 
 class CharacterRenderer : public da::DepthRenderBehavior {
+public:
+    CharacterRenderer(da::DepthDrawList &list);
 private:
     bool isCompatible(const da::Entity &entity) const;
     void updateEntity(const sf::Time &deltaTime, da::Entity &entity);

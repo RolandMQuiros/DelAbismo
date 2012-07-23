@@ -28,8 +28,8 @@ public:
 protected:
     virtual bool isCompatible(const Entity &entity) const;
     
-    virtual void addedEntity(Entity &entity) const;
-    virtual void removedEntity(Entity &entity) const;
+    virtual void addedEntity(Entity &entity);
+    virtual void removedEntity(Entity &entity);
     
     virtual void begin(const sf::Time &deltaTime);
     virtual void updateEntity(const sf::Time &deltaTime, Entity &entity);

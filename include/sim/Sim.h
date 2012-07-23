@@ -24,6 +24,8 @@ private:
     da::Game &mvGame;
     da::EntityManager mvEntities;
     da::DepthDrawList mvDrawList;
+    
+    da::EntityPtr createCharacter();
 };
 typedef std::shared_ptr<Sim> SimPtr;
     

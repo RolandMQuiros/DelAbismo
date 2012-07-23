@@ -1,6 +1,8 @@
 #include <cmath>
 #include <algorithm>
 
+#include <iostream>
+
 #include "da/Depth.h"
 #include "da/Transform.h"
 #include "common/WalkSprite.h"
@@ -8,6 +10,11 @@
 #include "sim/CharacterRenderer.h"
 
 namespace sim {
+
+CharacterRenderer::CharacterRenderer(da::DepthDrawList &list) :
+da::DepthRenderBehavior(list) {
+    
+}
 
 bool CharacterRenderer::isCompatible(const da::Entity &entity) const {
     return entity.hasAttribute<da::Depth>() &&
@@ -29,6 +36,11 @@ void CharacterRenderer::updateEntity(const sf::Time &deltaTime,
     
     common::WalkSprite::Direction direction = (common::WalkSprite::Direction)
         (common::WalkSprite::DirectionCount * (theta / da::MathHelper::TwoPi));
+    if (direction >= common::WalkSprite::DirectionCount) {
+        direction = (common::WalkSprite::Direction)(common::WalkSprite::DirectionCount - 1);
+    }
+    
+    std::cout << direction << std::endl;
     
     sf::RenderStates states;
     states.transform = transform.getTransform();

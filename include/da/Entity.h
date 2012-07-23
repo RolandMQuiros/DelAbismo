@@ -31,9 +31,18 @@ public:
     bool isActive() const;
     
     void addAttribute(const AttributePtr &attribute);
+    void addAttribute(Attribute *attribute);
     
     void removeAttribute(const AttributePtr &attribute);
     void removeAttribute(const AttributeRef &attribute);
+    
+    template <class T> void removeAttribute() {
+        AttributeMap::iterator iter = mvAttributes.find(T::TypeName);
+        
+        if (iter != mvAttributes.end()) {
+            mvAttributes.erase(iter);
+        }
+    }
     
     template <class T> bool hasAttribute() const {
         Iterator iter = mvAttributes.find(T::TypeName);
