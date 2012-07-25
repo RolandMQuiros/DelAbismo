@@ -16,10 +16,12 @@ set(sources src/da/Animation.cpp
             src/da/Entity.cpp
             src/da/EntityManager.cpp
             src/da/Game.cpp
-            src/da/Helper.cpp
+            src/da/MapReader.cpp
             src/da/MathHelper.cpp
             src/da/RenderBehavior.cpp
+            src/da/StringHelper.cpp
             src/da/TileRect.cpp
+            src/da/TileLayer.cpp
             src/da/TileSet.cpp
             src/da/Transform.cpp
             src/da/XmlHelper.cpp

@@ -1,7 +1,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include "da/Animation.h"
-#include "da/Helper.h"
+#include "da/StringHelper.h"
 #include "rapidxml/rapidxml.hpp"
 
 namespace da {

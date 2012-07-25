@@ -1,10 +1,10 @@
 #include <fstream>
-#include "da/Helper.h"
+#include "da/StringHelper.h"
 
 namespace da {
 
-std::vector<std::string> tokenize(const std::string &string,
-                                  const std::string &delimiters) {
+std::vector<std::string> StringHelper::tokenize(const std::string &string,
+                                                const std::string &delimiters) {
     std::vector<std::string> ret;
     
     int start = 0;
@@ -21,7 +21,7 @@ std::vector<std::string> tokenize(const std::string &string,
     return ret;
 }
 
-std::string getFileText(const std::string &filename) {
+std::string StringHelper::getFileText(const std::string &filename) {
     std::string ret;
     std::ifstream ifs(filename);
     

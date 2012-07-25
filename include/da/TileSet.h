@@ -49,7 +49,6 @@ private:
     sf::Sprite mvSprite;
     sf::IntRect mvTileSubrect;
 };
-typedef std::shared_ptr<TileSet> TileSetPtr;
 
 } // namespace game
 

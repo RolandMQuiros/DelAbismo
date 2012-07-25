@@ -3,16 +3,19 @@
 
 namespace da {
 
+const char *TileLayer::TypeName = "da::TileLayer";
+
 TileLayer::TileLayer(unsigned int widthInTiles, unsigned int heightInTiles,
                      unsigned int tileWidth, unsigned int tileHeight) :
 TileRect(widthInTiles, heightInTiles, tileWidth, tileHeight),
+Attribute(TypeName),
 mvTiles(mpSizeInTiles),
 mvTileSetIds(0),
 mvWrap(false) {
     
 }
 
-void TileLayer::addTileSet(TileSetPtr tileSet) {
+void TileLayer::addTileSet(std::shared_ptr<TileSet> tileSet) {
     mvTileSets.push_back(tileSet);
     mvTileSetIds += tileSet->getSizeInTiles();
 }
@@ -60,25 +63,12 @@ bool TileLayer::getWrap() const {
     return mvWrap;
 }
 
-void TileLayer::setScroll(sf::Vector2f const &scroll) {
-    mvScroll = scroll;
-}
-
-const sf::Vector2f &TileLayer::getScroll() const {
-    return mvScroll;
-}
-
 void TileLayer::setColor(const sf::Color &color) {
     mvColor = color;
 }
 
 const sf::Color &TileLayer::getColor() const {
     return mvColor;
-}
-
-void TileLayer::update(const sf::Time &deltaTime) {
-    move(deltaTime.asSeconds() * mvScroll.x,
-         deltaTime.asSeconds() * mvScroll.y);
 }
 
 void TileLayer::draw(sf::RenderTarget &target, sf::RenderStates states) const {
@@ -88,8 +78,6 @@ void TileLayer::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     sf::FloatRect limit(view.getCenter().x - (dim / 2.f),
                         view.getCenter().y - (dim / 2.f),
                         dim, dim);
-    
-    states.transform.combine(getTransform());
     
     float right = limit.left + limit.width;
     float bottom = limit.top + limit.height;
