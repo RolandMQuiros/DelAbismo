@@ -76,6 +76,12 @@ void EntityManager::remove(const EntityRef &entity) {
     remove(entity.lock());
 }
 
+void EntityManager::clear() {
+    mvGroups.clear();
+    mvEntitySearch.clear();
+    mvEntities.clear();
+}
+
 EntityRef EntityManager::get(unsigned int id) const {
     std::unordered_map<unsigned int, EntityIter>::const_iterator search =
         mvEntitySearch.find(id);

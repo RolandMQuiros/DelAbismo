@@ -27,6 +27,8 @@ public:
     void remove(const EntityPtr &entity);
     void remove(const EntityRef &entity);
     
+    void clear();
+    
     EntityRef get(unsigned int id) const;
     
     void addToGroup(const EntityRef &entity, const std::string &group);

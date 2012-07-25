@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <SFML/Window/Keyboard.hpp>
 
 #include "da/DAException.h"
 #include "da/Transform.h"
@@ -37,6 +38,10 @@ void Sim::dispose() {
 
 void Sim::update() {
     updater->update(mvGame.getFrameTime());
+    
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+        mvEntities.clear();
+    }
 }
 
 void Sim::draw() {
@@ -50,8 +55,6 @@ void Sim::draw() {
 da::EntityPtr Sim::createCharacter() {
     da::EntityPtr entity = mvEntities.create();
     
-    // TODO: Using the bare pointer overload causes a segfault on exit. Figure
-    // this shit out
     entity->addAttribute(new da::Transform()); // Segfaults
     entity->addAttribute(da::AttributePtr(new da::Depth()));  // Doesn't
     

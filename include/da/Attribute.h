@@ -9,6 +9,7 @@ namespace da {
 struct Attribute {
 public:
     Attribute(const std::string &typeName);
+    virtual ~Attribute();
     const std::string &getTypeName() const;
 private:
     std::string mvTypeName;
