@@ -18,8 +18,7 @@ TexturePtr TileSet::getTexture() const {
 }
 
 void TileSet::drawTile(sf::RenderTarget &dest, sf::RenderStates &states,
-                       unsigned int tileIndex, float x, float y,
-                       const sf::Color &color) {
+                       unsigned int tileIndex, float x, float y) {
     if (tileIndex < getSizeInTiles()) {
         // Retrieve the row and column from the index
         indexToRowCol(tileIndex, mvTileSubrect.top, mvTileSubrect.left);
@@ -31,7 +30,6 @@ void TileSet::drawTile(sf::RenderTarget &dest, sf::RenderStates &states,
         // Set up sprite for drawing
         mvSprite.setTextureRect(mvTileSubrect);
         mvSprite.setPosition(x, y);
-        mvSprite.setColor(color);
         
         // Draw sprite
         dest.draw(mvSprite, states);
@@ -39,9 +37,8 @@ void TileSet::drawTile(sf::RenderTarget &dest, sf::RenderStates &states,
 }
 
 void TileSet::drawTile(sf::RenderTarget &dest, sf::RenderStates &states,
-                       unsigned int tileIndex, const sf::Vector2f &pos,
-                       const sf::Color &color) {
-    drawTile(dest, states, tileIndex, pos.x, pos.y, color);
+                       unsigned int tileIndex, const sf::Vector2f &pos) {
+    drawTile(dest, states, tileIndex, pos.x, pos.y);
 }
 
 }

@@ -1,36 +1,40 @@
-#ifndef DA_DEPTHDRAWLIST_H
-#define DA_DEPTHDRAWLIST_H
+#ifndef DEPTHDRAWLIST_H
+#define DEPTHDRAWLIST_H
 
 #include <vector>
+#include <functional>
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
-#include "da/Depth.h"
+#include "attr/Depth.h"
 
-namespace da {
+typedef std::function<void(sf::RenderTarget &, sf::RenderStates)>
+    DrawFunction;
 
-class DepthDrawList : public sf::Drawable {
+class DepthDrawList {
 public:
-    void push(const sf::Drawable &drawable, const Depth &depth,
+    void push(const DrawFunction &draw, const attr::Depth &depth,
               const sf::RenderStates &states);
     void sort();
     void clear();
     
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+
 private:
     struct DrawRequest {
-        const sf::Drawable *drawable;
-        const Depth *depth;
+        DrawFunction draw;
+        const attr::Depth *depth;
         sf::RenderStates states;
         
+        DrawRequest(const DrawFunction &draw, const attr::Depth &depth,
+                    const sf::RenderStates &states);
         bool operator<(const DrawRequest &other) const;
     };
 
     std::vector<DrawRequest> mvList;
+    
 };
-
-}
 
 #endif

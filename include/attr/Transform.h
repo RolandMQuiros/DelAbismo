@@ -6,10 +6,8 @@
 
 namespace attr {
 
-struct Transform : public da::Attribute,
+struct Transform : public da::Attribute<Transform>,
                    public sf::Transformable {
-    static const char *TypeName;
-    Transform();
 };
 
 }

@@ -43,6 +43,7 @@ public:
      * @param state pointer to state to push
      */
     void pushState(StatePtr state);
+    void pushState(State *state);
     
     /**Removes a State from the front of this Game's State list.
      * @return Reference to the popped State.

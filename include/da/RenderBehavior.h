@@ -2,11 +2,11 @@
 #define DA_RENDERBEHAVIOR_H
 
 #include <SFML/Graphics/RenderTarget.hpp>
-#include "da/Behavior.h"
+#include "da/EntityBehavior.h"
 
 namespace da {
 
-class RenderBehavior : public Behavior {
+class RenderBehavior : public EntityBehavior {
 public:
     RenderBehavior();
     void setTarget(sf::RenderTarget &target);

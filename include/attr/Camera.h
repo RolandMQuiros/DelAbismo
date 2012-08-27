@@ -7,8 +7,7 @@
 
 namespace attr {
 
-struct Camera : public da::Attribute {
-    static const char *TypeName;
+struct Camera : public da::Attribute<Camera> {
     static const float DefaultSpeed;
     
     sf::RenderTarget &target;

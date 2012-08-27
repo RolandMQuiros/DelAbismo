@@ -1,11 +1,9 @@
-#include "da/Depth.h"
+#include <functional>
+#include "attr/Depth.h"
 
-namespace da {
+namespace attr {
 
-const char *Depth::TypeName = "da::Depth";
-    
-Depth::Depth() :
-Attribute(TypeName) {
+Depth::Depth() {
     mvDepths.push_back(0);
 }
 

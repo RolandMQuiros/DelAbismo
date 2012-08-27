@@ -25,6 +25,12 @@ void Game::pushState(StatePtr state) {
     }
 }
 
+void Game::pushState(State *state) {
+    if (state != NULL) {
+        pushState(StatePtr(state));
+    }
+}
+
 StatePtr Game::popState() {
     StatePtr popped = mvStates.front();
     popped->dispose();

@@ -13,8 +13,6 @@
 
 namespace da {
 
-typedef std::set<EntityRef, std::owner_less<EntityRef> > EntityGroup;
-
 class EntityManager {
 public:
     EntityManager();

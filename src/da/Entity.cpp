@@ -34,18 +34,18 @@ bool Entity::isActive() const {
 
 void Entity::addAttribute(const AttributePtr &attribute) {
     if (attribute) {        
-        mvAttributes[attribute->getTypeName()] = attribute;
+        mvAttributes[attribute->getTypeId()] = attribute;
     }
 }
 
-void Entity::addAttribute(Attribute *attribute) {
+void Entity::addAttribute(IAttribute *attribute) {
     if (attribute != NULL) {
         addAttribute(AttributePtr(attribute));
     }
 }
 
 void Entity::removeAttribute(const AttributePtr &attribute) {
-    AttributeMap::iterator iter = mvAttributes.find(attribute->getTypeName());
+    AttributeMap::iterator iter = mvAttributes.find(attribute->getTypeId());
     
     if (iter != mvAttributes.end()) {
         mvAttributes.erase(iter);

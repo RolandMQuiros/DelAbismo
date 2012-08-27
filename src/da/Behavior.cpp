@@ -6,6 +6,10 @@ Behavior::Behavior() :
 mvIsActive(true) {
     
 }
+
+Behavior::~Behavior() {
+    
+}
     
 void Behavior::setActive(bool active) {
     mvIsActive = active;
@@ -20,17 +24,15 @@ void Behavior::refreshEntity(const EntityRef &entity) {
         return;
     }
     
-    EntityPtr entPtr = entity.lock();
-    SearchIter search = mvSearchList.find(entPtr->getId());
-    bool contains = search != mvSearchList.end();
+    bool contains = mvActive.find(entity) != mvActive.end();
     bool compatible = isCompatible(*entity.lock());
     
     if (contains && !compatible) {
-        mvRemoved.push(search->second);
-        removedEntity(*entity.lock());
+        mvRemoved.push(entity);
+        removedEntity(entity);
     } else if (!contains && compatible) {
         mvAdded.push(entity);
-        addedEntity(*entity.lock());
+        addedEntity(entity);
     }
 }
 
@@ -49,64 +51,68 @@ void Behavior::update(const sf::Time &deltaTime) {
             continue;
         }
         
-        EntityPtr added = mvAdded.front().lock();
-        
-        unsigned int id = added->getId();
-        
-        mvActiveEntities.push_back(mvAdded.front());
-        mvActiveIds.push_back(id);
-        mvSearchList[mvActiveEntities.size() - 1] = id;
-        
+        mvActive.insert(mvAdded.front());
         mvAdded.pop();
     }
     
     while (!mvRemoved.empty()) {
-        unsigned int index = mvRemoved.front();
-        
-        mvActiveEntities.erase(mvActiveEntities.begin() + index);
-        mvSearchList.erase(mvActiveIds[index]);
-        mvActiveIds.erase(mvActiveIds.begin() + index);
-        
+        EntityGroup::iterator search = mvActive.find(mvRemoved.front());
+        if (search != mvActive.end()) {
+            mvActive.erase(search);
+        }
         mvRemoved.pop();
     }
     
-    begin(deltaTime);
+    mvDelta = deltaTime;
     
     if (mvIsActive) {
-        for (unsigned int i = 0; i < mvActiveEntities.size(); i++) {
-            EntityRef &entity = mvActiveEntities[i];
-            if (entity.expired()) {
-                mvRemoved.push(i);
-            } else {
-                updateEntity(deltaTime, *entity.lock());
-            }
+        updateEntities(mvActive);
+    }
+}
+
+const sf::Time &Behavior::getDelta() const {
+    return mvDelta;
+}
+
+void Behavior::addEntity(const EntityRef &entity) {
+    if (!entity.expired()) {
+        mvAdded.push(entity);
+    }
+}
+
+void Behavior::removeEntity(const EntityRef &entity) {
+    mvRemoved.push(entity);
+}
+
+void Behavior::cleanEntities() {
+    while (!mvAdded.empty()) {
+        if (mvAdded.front().expired()) {
+            mvAdded.pop();
+            continue;
         }
+        
+        mvActive.insert(mvAdded.front());
+        mvAdded.pop();
     }
     
-    end(deltaTime);
+    while (!mvRemoved.empty()) {
+        EntityGroup::iterator search = mvActive.find(mvRemoved.front());
+        if (search != mvActive.end()) {
+            mvActive.erase(search);
+        }
+        mvRemoved.pop();
+    }
 }
 
 bool Behavior::isCompatible(const Entity &entity) const {
     return false;
 }
 
-void Behavior::addedEntity(Entity &entity) {
+void Behavior::addedEntity(const EntityRef &entity) {
     
 }
 
-void Behavior::removedEntity(Entity &entity) {
-    
-}
-
-void Behavior::begin(const sf::Time &deltaTime) {
-    
-}
-
-void Behavior::updateEntity(const sf::Time &deltaTime, Entity &entity) {
-    
-}
-
-void Behavior::end(const sf::Time &deltaTime) {
+void Behavior::removedEntity(const EntityRef &entity) {
     
 }
 

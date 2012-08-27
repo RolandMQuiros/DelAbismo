@@ -4,6 +4,7 @@
 #include <memory>
 #include <sstream>
 #include <unordered_map>
+#include <set>
 
 #include "da/Attribute.h"
 #include "da/DAException.h"
@@ -12,8 +13,7 @@ namespace da {
 
 class Entity {
 private:
-    typedef std::unordered_map<std::string, AttributePtr,
-                               std::hash<const std::string &>> AttributeMap;
+    typedef std::unordered_map<unsigned int, AttributePtr> AttributeMap;
 public:
     typedef AttributeMap::const_iterator Iterator;
     
@@ -31,13 +31,13 @@ public:
     bool isActive() const;
     
     void addAttribute(const AttributePtr &attribute);
-    void addAttribute(Attribute *attribute);
+    void addAttribute(IAttribute *attribute);
     
     void removeAttribute(const AttributePtr &attribute);
     void removeAttribute(const AttributeRef &attribute);
     
     template <class T> void removeAttribute() {
-        AttributeMap::iterator iter = mvAttributes.find(T::TypeName);
+        AttributeMap::iterator iter = mvAttributes.find(T::typeId());
         
         if (iter != mvAttributes.end()) {
             mvAttributes.erase(iter);
@@ -45,7 +45,7 @@ public:
     }
     
     template <class T> bool hasAttribute() const {
-        Iterator iter = mvAttributes.find(T::TypeName);
+        Iterator iter = mvAttributes.find(T::typeId());
         bool ret = iter != mvAttributes.end() &&
                    iter->second;
         
@@ -54,7 +54,7 @@ public:
     
     // never throws
     template <class T> std::weak_ptr<T> getAttributeRef() const {
-        Iterator iter = mvAttributes.find(T::TypeName);
+        Iterator iter = mvAttributes.find(T::typeId());
         std::weak_ptr<T> ret;
         
         if (iter != mvAttributes.end()) {
@@ -66,7 +66,7 @@ public:
     
     // throws when search fails
     template <class T> T &getAttribute() const {
-        Iterator iter = mvAttributes.find(T::TypeName);
+        Iterator iter = mvAttributes.find(T::typeId());
         
         if (iter != mvAttributes.end()) {
             return *std::static_pointer_cast<T>(iter->second);
@@ -75,7 +75,7 @@ public:
         std::stringstream err;
         
         err << "Entity (id = " << getId() << ") does not contain "
-            << T::TypeName << " attribute";
+            << " attribute (" << T::typeId() << ")";
         
         throw Exception(__RELFILE__, __LINE__,
                         "Entity::getAttribute<T>() const", err.str());
@@ -93,6 +93,7 @@ private:
 
 typedef std::shared_ptr<Entity> EntityPtr;
 typedef std::weak_ptr<Entity> EntityRef;
+typedef std::set<EntityRef, std::owner_less<EntityRef> > EntityGroup;
 
 }
 

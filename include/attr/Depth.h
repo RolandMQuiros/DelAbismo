@@ -4,12 +4,10 @@
 #include <vector>
 #include "da/Attribute.h"
 
-namespace da {
+namespace attr {
 
-class Depth : public Attribute {
-public:
-    static const char *TypeName;
-    
+class Depth : public da::Attribute<Depth> {
+public:    
     Depth();
     
     void pushDepth(int depth);
@@ -21,8 +19,11 @@ public:
     bool operator<(const Depth &other) const;
     bool operator==(const Depth &other) const;
     bool operator>(const Depth &other) const;
+
 private:
     std::vector<int> mvDepths;
+    
+    
 };
 
 }

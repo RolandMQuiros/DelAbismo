@@ -34,21 +34,21 @@ public:
      * @param y y-position of render
      */
     void drawTile(sf::RenderTarget &dest, sf::RenderStates &states,
-                  unsigned int tileIndex, float x, float y,
-                  const sf::Color &color=sf::Color::White);
+                  unsigned int tileIndex, float x, float y);
     /**Draws a tile onto a sf::RenderTarget
      * @param dest RenderTarget to draw onto
      * @param tileIndex index of tile to draw
      * @param pos render position
      */
     void drawTile(sf::RenderTarget &dest, sf::RenderStates &states,
-                  unsigned int tileIndex, const sf::Vector2f &pos,
-                  const sf::Color &color=sf::Color::White);
+                  unsigned int tileIndex, const sf::Vector2f &pos);
 private:
     TexturePtr mvTexture;
     sf::Sprite mvSprite;
     sf::IntRect mvTileSubrect;
 };
+typedef std::shared_ptr<TileSet> TileSetPtr;
+typedef std::weak_ptr<TileSet> TileSetRef;
 
 } // namespace game
 
