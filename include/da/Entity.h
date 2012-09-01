@@ -31,7 +31,7 @@ public:
     bool isActive() const;
     
     void addAttribute(const AttributePtr &attribute);
-    void addAttribute(IAttribute *attribute);
+    void addAttribute(AttributeBase *attribute);
     
     void removeAttribute(const AttributePtr &attribute);
     void removeAttribute(const AttributeRef &attribute);

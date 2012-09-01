@@ -38,7 +38,7 @@ void Entity::addAttribute(const AttributePtr &attribute) {
     }
 }
 
-void Entity::addAttribute(IAttribute *attribute) {
+void Entity::addAttribute(AttributeBase *attribute) {
     if (attribute != NULL) {
         addAttribute(AttributePtr(attribute));
     }

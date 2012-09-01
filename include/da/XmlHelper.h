@@ -5,9 +5,11 @@
 #include <rapidxml/rapidxml.hpp>
 
 namespace da {
+namespace XmlHelper {
 
-std::string getXmlAttribute(rapidxml::xml_node<> *node,
-                            const std::string &attributeName);
+std::string getAttribute(rapidxml::xml_node<> *node,
+                         const std::string &attributeName);
+}
 }
 
 #endif

@@ -2,9 +2,10 @@
 #include "da/XmlExceptions.h"
 
 namespace da {
+namespace XmlHelper {
 
-std::string getXmlAttribute(rapidxml::xml_node<> *node,
-                            const std::string &attributeName) {
+std::string getAttribute(rapidxml::xml_node<> *node,
+                         const std::string &attributeName) {
     std::string ret;
     rapidxml::xml_attribute<> *attr;
     
@@ -20,6 +21,8 @@ std::string getXmlAttribute(rapidxml::xml_node<> *node,
     }
     
     return attr->value();
+}
+
 }
 
 }

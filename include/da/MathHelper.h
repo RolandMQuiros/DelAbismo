@@ -2,15 +2,13 @@
 #define DA_MATHHELPER_H
 
 namespace da {
-
-struct MathHelper {
-    static const float Pi;
-    static const float TwoPi;
-    static const float PiOverTwo;
-    static const float PiOverFour;
-    static const float PiOverEight;
-};
-
+namespace MathHelper {
+    extern const float Pi;
+    extern const float TwoPi;
+    extern const float PiOverTwo;
+    extern const float PiOverFour;
+    extern const float PiOverEight;
+}
 }
 
 #endif

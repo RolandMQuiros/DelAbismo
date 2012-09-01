@@ -1,12 +1,12 @@
-#include <iostream>
+#include <algorithm>
 #include "attr/Transform.h"
 #include "attr/Depth.h"
 #include "bhvr/SpatialRenderer.h"
 
 namespace bhvr {
 
-bool SpatialLess::operator()(const std::shared_ptr<SpatialBase> &a,
-                             const std::shared_ptr<SpatialBase> &b) const {
+bool spatialLess(const std::shared_ptr<SpatialBase> &a,
+                 const std::shared_ptr<SpatialBase> &b) {
     if (a && b) {
         attr::Depth &depthA = a->getEntity().getAttribute<attr::Depth>();
         attr::Depth &depthB = b->getEntity().getAttribute<attr::Depth>();
@@ -27,32 +27,30 @@ bool SpatialRenderer::isCompatible(const da::Entity &entity) const {
 }
 
 void SpatialRenderer::addedEntity(const da::EntityRef &entity) {
-    for (SpatialMap::iterator iter = mRegistered.begin();
+    for (SpatialCreationMap::iterator iter = mRegistered.begin();
          iter != mRegistered.end(); iter++) {
         SpatialPtr spatial(iter->second(*entity.lock()));
         if (spatial) {
-            mSpatials.insert(spatial);
-            int sz = mSpatials.size();
-            mSources[entity].push_back(spatial);
+            mSpatials.push_back(spatial);
         }
     }
 }
 
 void SpatialRenderer::removedEntity(const da::EntityRef &entity) {
-    SpatialSourceMap::iterator search = mSources.find(entity);
+    da::EntityPtr entPtr = entity.lock();
     
-    for (unsigned int i = 0; i < search->second.size(); i++) {
-        mSpatials.erase(search->second[i]);
+    for (unsigned int i = 0; i < mSpatials.size(); i++) {
+        if (mSpatials[i] && &mSpatials[i]->getEntity() == entPtr.get()) {
+            mSpatials.erase(mSpatials.begin() + i--);
+        }
     }
-    
-    mSources.erase(entity);
 }
 
 void SpatialRenderer::updateEntities(da::EntityGroup &entities) {
-    SpatialSet::iterator iter;
+    std::sort(mSpatials.begin(), mSpatials.end(), spatialLess);
     
-    for (iter = mSpatials.begin(); iter != mSpatials.end(); iter++) {
-        mTarget.draw(**iter);
+    for (unsigned int i = 0; i < mSpatials.size(); i++) {
+        mTarget.draw(*mSpatials[i]);
     }
 }
 

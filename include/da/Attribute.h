@@ -21,7 +21,7 @@ namespace da {
 
 typedef unsigned int AttributeId;
 
-class IAttribute {
+class AttributeBase {
 public:
     virtual AttributeId getTypeId() const=0;
 
@@ -31,7 +31,7 @@ protected:
 };
 
 template <class Derived>
-class Attribute : public IAttribute {
+class Attribute : public AttributeBase {
 private:
     static AttributeId msTypeId;
 
@@ -62,8 +62,8 @@ public:
 
 template <class Derived> AttributeId Attribute<Derived>::msTypeId = 0;
 
-typedef std::shared_ptr<IAttribute> AttributePtr;
-typedef std::weak_ptr<IAttribute> AttributeRef;
+typedef std::shared_ptr<AttributeBase> AttributePtr;
+typedef std::weak_ptr<AttributeBase> AttributeRef;
 
 }
 

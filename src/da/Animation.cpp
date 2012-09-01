@@ -193,8 +193,6 @@ void Animation::update(const sf::Time &deltaTime) {
 }
 
 void Animation::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    states.transform *= getTransform() * mvFrames[mvFrame].states.transform;
-    
     if (!mvFrames.empty()) {
         target.draw(mvSprite, states);
     }

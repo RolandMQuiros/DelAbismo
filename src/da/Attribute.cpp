@@ -2,6 +2,6 @@
 
 namespace da {
 
-AttributeId IAttribute::sNextId = 0;
+AttributeId AttributeBase::sNextId = 0;
 
 }

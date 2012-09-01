@@ -22,8 +22,7 @@ public:
 
 private:
     std::vector<int> mvDepths;
-    
-    
+        
 };
 
 }
