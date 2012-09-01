@@ -8,32 +8,29 @@
 #include "da/DAException.h"
 
 namespace da {
+namespace StringHelper {
+    
+template< typename T > T convert(const std::string& str) {
+    std::istringstream iss(str);
+    T ret;
 
-struct StringHelper {
-    template< typename T >
-    static T convert(const std::string& str) {
-        std::istringstream iss(str);
-        T ret;
+    iss >> std::ws >> ret >> std::ws;
 
-        iss >> std::ws >> ret >> std::ws;
-
-        if(!iss.eof()) {
-            throw DAException(__FILE__, __LINE__, "StringConvert(string)",
-                              "\"" + str + "\" cannot be converted to a number "
-                              "type");
-        }
-
-        return ret; 
+    if(!iss.eof()) {
+        throw DAException(__FILE__, __LINE__, "StringConvert(string)",
+                          "\"" + str + "\" cannot be converted to a number "
+                          "type");
     }
 
-    static std::vector<std::string> tokenize(const std::string &string,
-                                             const std::string &delimiters);
-
-    static std::string getFileText(const std::string &filename);
-};
-
+    return ret; 
 }
 
+std::vector<std::string> tokenize(const std::string &string,
+                                  const std::string &delimiters);
 
-#endif	/* HELPER_H */
+std::string getFileText(const std::string &filename);
+    
+}
+}
 
+#endif

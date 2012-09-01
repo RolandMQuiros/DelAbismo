@@ -1,14 +1,14 @@
 #include <cstring>
 
-#include "da/MapReader.h"
 #include "da/StringHelper.h"
-#include "da/TileRect.h"
 #include "da/XmlExceptions.h"
 #include "da/XmlHelper.h"
 #include "da/NotImplementedException.h"
 
-namespace da {
+#include "da/twod/MapReader.h"
 
+namespace da {
+namespace twod {
 ////////////////////////////////////////////////////////////////////////////////
 
 void MapProperties::loadProperties(rapidxml::xml_node<> *node) {
@@ -23,8 +23,8 @@ void MapProperties::loadProperties(rapidxml::xml_node<> *node) {
             continue;
         }
         
-        std::string name = XmlHelper::getAttribute(tnode, "name");
-        std:: string value = XmlHelper::getAttribute(tnode, "value");
+        std::string name = da::XmlHelper::getAttribute(tnode, "name");
+        std:: string value = da::XmlHelper::getAttribute(tnode, "value");
         
         Properties[name] = value;
     }    
@@ -38,16 +38,16 @@ MapReader::Object::Object(rapidxml::xml_node<> *node) try {
     std::string exsource("MapReader::Object::Object(xml_node<> *)");
     
     // Load Object name
-    Name = XmlHelper::getAttribute(node, "name");
+    Name = da::XmlHelper::getAttribute(node, "name");
     
     // Get Object Type
-    Type = XmlHelper::getAttribute(node, "type");
+    Type = da::XmlHelper::getAttribute(node, "type");
     
     // Get Object x-coordinate
-    Rect.left = StringHelper::convert<float>(XmlHelper::getAttribute(node, "x"));
+    Rect.left = da::StringHelper::convert<float>(da::XmlHelper::getAttribute(node, "x"));
     
     // Get Object y-coordinate
-    Rect.top = StringHelper::convert<float>(XmlHelper::getAttribute(node, "y"));
+    Rect.top = da::StringHelper::convert<float>(da::XmlHelper::getAttribute(node, "y"));
     
     // Get Object polyline points, if they exist
     std::string points;
@@ -57,13 +57,13 @@ MapReader::Object::Object(rapidxml::xml_node<> *node) try {
         // Tokenize ordered pairs
         points = tattr->value();
         
-        pairTokens = StringHelper::tokenize(points, " ");
+        pairTokens = da::StringHelper::tokenize(points, " ");
         for (unsigned int i = 0; i < pairTokens.size(); i++) {
             std::vector<std::string> tokens =
-                StringHelper::tokenize(pairTokens[i], ",");
+                da::StringHelper::tokenize(pairTokens[i], ",");
             if (tokens.size() == 2) {
-                sf::Vector2f pt(StringHelper::convert<float>(tokens[0]),
-                                StringHelper::convert<float>(tokens[1]));
+                sf::Vector2f pt(da::StringHelper::convert<float>(tokens[0]),
+                                da::StringHelper::convert<float>(tokens[1]));
                 Points.push_back(pt);
             }
         }
@@ -73,7 +73,7 @@ MapReader::Object::Object(rapidxml::xml_node<> *node) try {
     if ((tnode = node->first_node("properties")) != NULL) {
         loadProperties(tnode);
     }
-} catch (DAException &e) {
+} catch (da::DAException &e) {
     Exception except(__FILE__, __LINE__,
                      "MapReader::Object::Object(xml_node<> *)",
                      "Error reading Map Object");
@@ -90,49 +90,49 @@ MapReader::Layer::Layer(rapidxml::xml_node<> *node) try {
     std::string exsource("MapReader::Layer::Layer(xml_node<> *)");
     std::string tmp;
 
-    Name = XmlHelper::getAttribute(node, "name");
+    Name = da::XmlHelper::getAttribute(node, "name");
     
-    WidthInTiles = StringHelper::convert<float>(
-        XmlHelper::getAttribute(node, "width")
+    WidthInTiles = da::StringHelper::convert<float>(
+        da::XmlHelper::getAttribute(node, "width")
     );
     
-    HeightInTiles = StringHelper::convert<float>(
-        XmlHelper::getAttribute(node, "height")
+    HeightInTiles = da::StringHelper::convert<float>(
+        da::XmlHelper::getAttribute(node, "height")
     );
     
     try {
-        Opacity = StringHelper::convert<float>(
-            XmlHelper::getAttribute(node, "opacity")
+        Opacity = da::StringHelper::convert<float>(
+            da::XmlHelper::getAttribute(node, "opacity")
         );
-    } catch (DAException &e) {
+    } catch (da::DAException &e) {
         // Opacity is optional
         Opacity = 1.f;
     }
     
     try {
-        Visible = StringHelper::convert<bool>(XmlHelper::getAttribute(node, "visible"));
-    } catch (DAException &e) {
+        Visible = da::StringHelper::convert<bool>(da::XmlHelper::getAttribute(node, "visible"));
+    } catch (da::DAException &e) {
         // Visibility is optional
         Visible = true;
     }
     
     if ((tnode = node->first_node("data")) == NULL) {
-        throw NoSuchNodeXmlException(
+        throw da::NoSuchNodeXmlException(
             __FILE__, __LINE__, exsource, node->name(), "data"
         );
     }
     
     // Get tile data
-    std::string encoding = XmlHelper::getAttribute(tnode, "encoding");
+    std::string encoding = da::XmlHelper::getAttribute(tnode, "encoding");
     if (encoding == "csv") {
         std::string data(tnode->value());
-        std::vector<std::string> tokens = StringHelper::tokenize(data, ",");
+        std::vector<std::string> tokens = da::StringHelper::tokenize(data, ",");
         
         for (unsigned int i = 0; i < tokens.size(); i++) {
-            Tiles.push_back(StringHelper::convert<int>(tokens[i]));
+            Tiles.push_back(da::StringHelper::convert<int>(tokens[i]));
         }
     } else {
-        throw NotImplementedException(
+        throw da::NotImplementedException(
             __FILE__, __LINE__, exsource, "Non-CSV formats not supported"
         );
     }
@@ -141,7 +141,7 @@ MapReader::Layer::Layer(rapidxml::xml_node<> *node) try {
     if ((tnode = node->first_node("properties")) != NULL) {
         loadProperties(tnode);
     }
-} catch (DAException &e) {
+} catch (da::DAException &e) {
     Exception except(__FILE__, __LINE__,
                      "MapReader::Layer::Layer(xml_node<> *)",
                      "Error loading Layer");
@@ -156,23 +156,23 @@ MapReader::ObjectGroup::ObjectGroup() {
 MapReader::ObjectGroup::ObjectGroup(rapidxml::xml_node<> *node) try {    
     std::string tmp;
     
-    Name = XmlHelper::getAttribute(node, "name");
+    Name = da::XmlHelper::getAttribute(node, "name");
     
-    tmp = XmlHelper::getAttribute(node, "width");
-    WidthInTiles = StringHelper::convert<unsigned int>(tmp);
-    tmp = XmlHelper::getAttribute(node, "height");
-    HeightInTiles = StringHelper::convert<unsigned int>(tmp);
+    tmp = da::XmlHelper::getAttribute(node, "width");
+    WidthInTiles = da::StringHelper::convert<unsigned int>(tmp);
+    tmp = da::XmlHelper::getAttribute(node, "height");
+    HeightInTiles = da::StringHelper::convert<unsigned int>(tmp);
     
     try {
-        Opacity = StringHelper::convert<float>(XmlHelper::getAttribute(node, "opacity"));
-    } catch (XmlException &e) {
+        Opacity = da::StringHelper::convert<float>(da::XmlHelper::getAttribute(node, "opacity"));
+    } catch (da::XmlException &e) {
         // Opacity is optional
         Opacity = 1.f;
     }
     
     try {
-        Visible = StringHelper::convert<bool>(XmlHelper::getAttribute(node, "visible"));
-    } catch (DAException &e) {
+        Visible = da::StringHelper::convert<bool>(da::XmlHelper::getAttribute(node, "visible"));
+    } catch (da::DAException &e) {
         // Visibility is optional
         Visible = true;
     }
@@ -181,7 +181,7 @@ MapReader::ObjectGroup::ObjectGroup(rapidxml::xml_node<> *node) try {
          tnode = tnode->next_sibling()) {
         Objects.push_back(Object(tnode));
     }
-} catch (DAException &e) {
+} catch (da::DAException &e) {
     Exception except(__FILE__, __LINE__,
                      "MapReader::ObjectGroup::ObjectGroup(xml_node<> *)",
                      "Error loading ObjectGroup");
@@ -193,28 +193,28 @@ MapReader::TileSet::TileSet() {
 }
 
 MapReader::TileSet::TileSet(rapidxml::xml_node<> *node) try {
-    Name = XmlHelper::getAttribute(node, "name");
+    Name = da::XmlHelper::getAttribute(node, "name");
     
-    FirstGid = StringHelper::convert<unsigned int>(
-        XmlHelper::getAttribute(node, "firstgid")
+    FirstGid = da::StringHelper::convert<unsigned int>(
+        da::XmlHelper::getAttribute(node, "firstgid")
     );
     
-    TileWidth = StringHelper::convert<unsigned int>(
-        XmlHelper::getAttribute(node, "tilewidth")
+    TileWidth = da::StringHelper::convert<unsigned int>(
+        da::XmlHelper::getAttribute(node, "tilewidth")
     );
     
-    TileHeight = StringHelper::convert<unsigned int>(
-        XmlHelper::getAttribute(node, "tileheight")
+    TileHeight = da::StringHelper::convert<unsigned int>(
+        da::XmlHelper::getAttribute(node, "tileheight")
     );
     
     for (rapidxml::xml_node<> *tnode = node->first_node(); tnode;
          tnode = tnode->next_sibling()) {
         std::string nodeName = tnode->name();
         if (nodeName == "image") {
-            ImageSource = XmlHelper::getAttribute(tnode, "source");
+            ImageSource = da::XmlHelper::getAttribute(tnode, "source");
         }
     }
-} catch (DAException &e) {
+} catch (da::DAException &e) {
     Exception except(__FILE__, __LINE__,
                      "MapReader::ObjectGroup::ObjectGroup(xml_node<> *)",
                      "Error loading ObjectGroup");
@@ -228,8 +228,8 @@ MapReader::MapReader() {
 
 MapReader::MapReader(const std::string &filename) try {
     loadFromFile(filename);
-} catch (DAException &e) {
-    DAException except(__FILE__, __LINE__,
+} catch (da::DAException &e) {
+    da::DAException except(__FILE__, __LINE__,
                        "MapReader::MapReader(const string&)",
                        "Error parsing Map file " + filename);
     e.pushMessage(except);
@@ -241,7 +241,7 @@ void MapReader::loadFromFile(const std::string &filename) {
     rapidxml::xml_document<> doc;
     rapidxml::xml_node<> *node;
     
-    std::string xmlText = StringHelper::getFileText(filename);
+    std::string xmlText = da::StringHelper::getFileText(filename);
     if (xmlText.empty()) {
         throw Exception(__FILE__, __LINE__, exsource, "Problem opening file " +
                         filename);
@@ -262,12 +262,12 @@ void MapReader::loadFromFile(const std::string &filename) {
     }
     
     try {
-        TileWidth = StringHelper::convert<unsigned int>(
-            XmlHelper::getAttribute(node,"tilewidth")
+        TileWidth = da::StringHelper::convert<unsigned int>(
+            da::XmlHelper::getAttribute(node,"tilewidth")
         );
         
-        TileHeight = StringHelper::convert<unsigned int>(
-            XmlHelper::getAttribute(node, "tileheight")
+        TileHeight = da::StringHelper::convert<unsigned int>(
+            da::XmlHelper::getAttribute(node, "tileheight")
         );
         
         for (node = node->first_node(); node; node = node->next_sibling()) {
@@ -285,7 +285,7 @@ void MapReader::loadFromFile(const std::string &filename) {
                 ObjectGroups[group.Name] = group;
             }
         }
-    } catch (DAException &e) {
+    } catch (da::DAException &e) {
         Exception except(__FILE__, __LINE__, exsource, "Error loading map " +
                          filename);
         except.pushMessage(e);
@@ -297,6 +297,6 @@ void MapReader::loadFromFile(const std::string &filename) {
 MapReader::Exception::Exception(const std::string &where, unsigned long line,
                                 const std::string &source,
                                 const std::string &what) :
-DAException(where, line, source, what) { }
-
+da::DAException(where, line, source, what) { }
+}
 }

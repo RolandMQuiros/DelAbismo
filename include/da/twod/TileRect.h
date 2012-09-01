@@ -1,11 +1,13 @@
 /**
- * Subclass for every object that is a rectangle subdivided into tiles.
+ * Superclass for every object that is a rectangle subdivided into tiles.
  */
 
-#ifndef DA_TILERECT_H
-#define DA_TILERECT_H
+#ifndef DA_TWOD_TILERECT_H
+#define DA_TWOD_TILERECT_H
 
 namespace da {
+namespace twod {
+    
 class TileRect {
 public:
     /**Construct a TileRect with the given dimensions
@@ -84,6 +86,8 @@ protected:
     unsigned int mpHeightInTiles;
     unsigned int mpSizeInTiles;
 };
+
+}
 }
 
 #endif

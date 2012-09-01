@@ -1,5 +1,5 @@
-#ifndef DA_MAPREADER_H
-#define	DA_MAPREADER_H
+#ifndef DA_TWOD_MAPREADER_H
+#define	DA_TWOD_MAPREADER_H
 
 #include <vector>
 #include <map>
@@ -8,11 +8,13 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Vector2.hpp>
 
-#include "rapidxml/rapidxml.hpp"
-#include "da/TileRect.h"
 #include "da/DAException.h"
+#include "da/twod/TileRect.h"
+
+#include "rapidxml/rapidxml.hpp"
 
 namespace da {
+namespace twod {
 
 class MapProperties {
 public:
@@ -87,13 +89,13 @@ public:
     MapReader(const std::string &filename);
     void loadFromFile(const std::string &filename);
     
-    struct Exception : public DAException {
+    struct Exception : public da::DAException {
         Exception(const std::string &where, unsigned long line,
                   const std::string &source, const std::string &what);
     };
 };
 
 }
+}
 
-#endif	/* MAPREADER_H */
-
+#endif

@@ -1,5 +1,5 @@
-#ifndef DA_TILESET_H
-#define DA_TILESET_H
+#ifndef TWOD_TILESET_H
+#define TWOD_TILESET_H
 
 #include <map>
 #include <vector>
@@ -10,9 +10,10 @@
 #include <SFML/Graphics/Texture.hpp>
 
 #include "da/ContentTypes.h"
-#include "da/TileRect.h"
+#include "da/twod/TileRect.h"
 
 namespace da {
+namespace twod {
 
 class TileSet : public TileRect {
 public:
@@ -21,12 +22,12 @@ public:
      * @param tileWidth tile width in pixels
      * @param tileHeight tile height in pixels
      */
-    TileSet(TexturePtr texture, unsigned int tileWidth,
+    TileSet(da::TexturePtr texture, unsigned int tileWidth,
             unsigned int tileHeight);
     /**Get TileSet source texture
      * @return source texture
      */
-    TexturePtr getTexture() const;
+    da::TexturePtr getTexture() const;
     /**Draws a tile onto a sf::RenderTarget
      * @param dest RenderTarget to draw onto
      * @param tileIndex index of tile to draw
@@ -43,13 +44,14 @@ public:
     void drawTile(sf::RenderTarget &dest, sf::RenderStates &states,
                   unsigned int tileIndex, const sf::Vector2f &pos);
 private:
-    TexturePtr mvTexture;
+    da::TexturePtr mvTexture;
     sf::Sprite mvSprite;
     sf::IntRect mvTileSubrect;
 };
 typedef std::shared_ptr<TileSet> TileSetPtr;
 typedef std::weak_ptr<TileSet> TileSetRef;
 
-} // namespace game
+}
+}
 
 #endif

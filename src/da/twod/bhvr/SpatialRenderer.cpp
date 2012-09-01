@@ -1,8 +1,10 @@
 #include <algorithm>
-#include "attr/Transform.h"
-#include "attr/Depth.h"
-#include "bhvr/SpatialRenderer.h"
+#include "da/twod/attr/Transform.h"
+#include "da/twod/attr/Depth.h"
+#include "da/twod/bhvr/SpatialRenderer.h"
 
+namespace da {
+namespace twod {
 namespace bhvr {
 
 bool spatialLess(const std::shared_ptr<SpatialBase> &a,
@@ -21,12 +23,12 @@ mTarget(target) {
     
 }
 
-bool SpatialRenderer::isCompatible(const da::Entity &entity) const {
+bool SpatialRenderer::isCompatible(const Entity &entity) const {
     return entity.hasAttribute<attr::Transform>() &&
            entity.hasAttribute<attr::Depth>();
 }
 
-void SpatialRenderer::addedEntity(const da::EntityRef &entity) {
+void SpatialRenderer::addedEntity(const EntityRef &entity) {
     for (SpatialCreationMap::iterator iter = mRegistered.begin();
          iter != mRegistered.end(); iter++) {
         SpatialPtr spatial(iter->second(*entity.lock()));
@@ -36,8 +38,8 @@ void SpatialRenderer::addedEntity(const da::EntityRef &entity) {
     }
 }
 
-void SpatialRenderer::removedEntity(const da::EntityRef &entity) {
-    da::EntityPtr entPtr = entity.lock();
+void SpatialRenderer::removedEntity(const EntityRef &entity) {
+    EntityPtr entPtr = entity.lock();
     
     for (unsigned int i = 0; i < mSpatials.size(); i++) {
         if (mSpatials[i] && &mSpatials[i]->getEntity() == entPtr.get()) {
@@ -46,7 +48,7 @@ void SpatialRenderer::removedEntity(const da::EntityRef &entity) {
     }
 }
 
-void SpatialRenderer::updateEntities(da::EntityGroup &entities) {
+void SpatialRenderer::updateEntities(EntityGroup &entities) {
     std::sort(mSpatials.begin(), mSpatials.end(), spatialLess);
     
     for (unsigned int i = 0; i < mSpatials.size(); i++) {
@@ -54,4 +56,6 @@ void SpatialRenderer::updateEntities(da::EntityGroup &entities) {
     }
 }
 
+}
+}
 }

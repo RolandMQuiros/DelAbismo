@@ -1,8 +1,9 @@
-#include "da/TileSet.h"
+#include "da/twod/TileSet.h"
 
 namespace da {
+namespace twod {
 
-TileSet::TileSet(TexturePtr texture, unsigned int tileWidth,
+TileSet::TileSet(da::TexturePtr texture, unsigned int tileWidth,
                  unsigned int tileHeight) try :
 TileRect::TileRect(texture->getSize().x / tileWidth,
                    texture->getSize().y / tileHeight, tileWidth, tileHeight),
@@ -13,7 +14,7 @@ mvTileSubrect(0, 0, tileWidth, tileHeight) {
     throw;
 }
 
-TexturePtr TileSet::getTexture() const {
+da::TexturePtr TileSet::getTexture() const {
     return mvTexture;
 }
 
@@ -41,4 +42,5 @@ void TileSet::drawTile(sf::RenderTarget &dest, sf::RenderStates &states,
     drawTile(dest, states, tileIndex, pos.x, pos.y);
 }
 
+}
 }

@@ -1,6 +1,8 @@
 #include <functional>
-#include "attr/Depth.h"
+#include "da/twod/attr/Depth.h"
 
+namespace da {
+namespace twod {
 namespace attr {
 
 Depth::Depth() {
@@ -63,4 +65,6 @@ bool Depth::operator>(const Depth &other) const {
     return !(*this < other);
 }
     
+}
+}
 }

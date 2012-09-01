@@ -30,8 +30,8 @@
  * @see bhvr::SpatialRenderer
  */
 
-#ifndef SPATIAL_H
-#define SPATIAL_H
+#ifndef DA_TWOD_SPATIAL_H
+#define DA_TWOD_SPATIAL_H
 
 #include <unordered_map>
 #include <functional>
@@ -40,6 +40,9 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include "da/Entity.h"
 
+namespace da {
+namespace twod {
+    
 typedef unsigned int SpatialId;
 
 /**
@@ -125,5 +128,8 @@ public:
 };
 
 template <class Derived> SpatialId Spatial<Derived>::msTypeId = 0;
+
+}
+}
 
 #endif

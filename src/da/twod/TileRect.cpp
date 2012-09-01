@@ -1,6 +1,7 @@
-#include "da/TileRect.h"
+#include "da/twod/TileRect.h"
 
 namespace da {
+namespace twod {
 
 TileRect::TileRect(unsigned int widthInTiles, unsigned int heightInTiles,
                    unsigned int tileWidth, unsigned int tileHeight) :
@@ -93,4 +94,5 @@ unsigned int TileRect::rowColToIndex(unsigned int row, unsigned int col,
     return (row % height) * width + (col % width);
 }
 
+}
 }

@@ -1,24 +1,24 @@
 /**
  * Primary rendering behavior for entities with 2D graphics.
  *
- * An eligible da::Entity at least the following attributes:
+ * An eligible Entity at least the following attributes:
  *   - attr::Transform
  *   - attr::Depth.
  *
- * When adding a da::Entity, bhvr::SpatialRenderer will check a table of
+ * When adding a Entity, bhvr::SpatialRenderer will check a table of
  * registered Spatial types to see if an associated one exists.
  *
  * bhvr::SpatialRenderer's is chiefly meant to sort 2D renders to simulate
  * depth, or distance from the player's view.
  *
  * @see Spatial
- * @see da::Entity
+ * @see Entity
  * @see attr::Transform
  * @see attr::Depth
  */
 
-#ifndef BHVR_SPATIALRENDERER_H
-#define BHVR_SPATIALRENDERER_H
+#ifndef DA_TWOD_BHVR_SPATIALRENDERER_H
+#define DA_TWOD_BHVR_SPATIALRENDERER_H
 
 #include <functional>
 #include <map>
@@ -27,14 +27,16 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 
 #include "da/Behavior.h"
-#include "Spatial.h"
+#include "da/twod/Spatial.h"
 
+namespace da {
+namespace twod {
 namespace bhvr {
 
 /**
  * Type of a Spatial creation callback
  */
-typedef std::function<SpatialBase *(da::Entity &e)> SpatialCreationFn;
+typedef std::function<SpatialBase *(Entity &e)> SpatialCreationFn;
 
 /**
  * Compares two Spatials std::shared_ptr, based on attr::Depth
@@ -43,7 +45,7 @@ typedef std::function<SpatialBase *(da::Entity &e)> SpatialCreationFn;
  * @param $b
  *   Pointer to second Spatial
  * @return
- *   true if the da::Depth of b is greater than the da::Depth of a, false
+ *   true if the Depth of b is greater than the Depth of a, false
  *   otherwise.
  *    
  * @see attr::Depth
@@ -51,10 +53,10 @@ typedef std::function<SpatialBase *(da::Entity &e)> SpatialCreationFn;
 bool spatialLess(const std::shared_ptr<SpatialBase> &a,
                  const std::shared_ptr<SpatialBase> &b);
 
-class SpatialRenderer : public da::Behavior {
+class SpatialRenderer : public Behavior {
 protected:
     /**
-     * Checks if a given da::Entity is compatible with this SpatialRenderer.
+     * Checks if a given Entity is compatible with this SpatialRenderer.
      * Returns true if $entity contains:
      *   - attr::Transform
      *   - attr::Depth
@@ -63,30 +65,30 @@ protected:
      * @return
      *   true, if $entity meets the requirements, false otherwise
      */
-    bool isCompatible(const da::Entity &entity) const;
+    bool isCompatible(const Entity &entity) const;
     
     /**
-     * Called when a da::Entity is added to this da::Behavior.
+     * Called when a Entity is added to this Behavior.
      *
-     * Overrides da::Behavior::addedEntity.
+     * Overrides Behavior::addedEntity.
      * @param $entity
-     *   Reference to da::Entity added
-     * @see da::Behavior::addedEntity
+     *   Reference to Entity added
+     * @see Behavior::addedEntity
      */
-    void addedEntity(const da::EntityRef &entity);
+    void addedEntity(const EntityRef &entity);
     
     /**
-     * Called when a da::Entity is removed from this da::Behavior.
+     * Called when a Entity is removed from this Behavior.
      *
-     * Overrides da::Behavior::addedEntity.
+     * Overrides Behavior::addedEntity.
      * @param $entity
-     *   Reference to da::Entity removed
-     * @see da::Behavior::removedEntity
+     *   Reference to Entity removed
+     * @see Behavior::removedEntity
      */
-    void removedEntity(const da::EntityRef &entity);
+    void removedEntity(const EntityRef &entity);
     
     
-    void updateEntities(da::EntityGroup &entities);
+    void updateEntities(EntityGroup &entities);
 
 private:
     typedef std::shared_ptr<SpatialBase> SpatialPtr;
@@ -110,6 +112,8 @@ public:
 
 };
 
+}
+}
 }
 
 #endif
