@@ -17,7 +17,7 @@ namespace test {
         sf::Sprite sprite;
     };
     
-    class TestSpatial : public Spatial<TestSpatial> {
+    class TestSpatial : public da::twod::Spatial<TestSpatial> {
     public:
         TestSpatial(da::Entity &entity);
         
@@ -29,12 +29,12 @@ namespace test {
     };
     
     TestSpatial::TestSpatial(da::Entity &entity) :
-    Spatial<TestSpatial>(entity),
+    da::twod::Spatial<TestSpatial>(entity),
     mSprite(entity.getAttribute<SpriteAttribute>().sprite) {
         
     }
     
-    SpatialBase *TestSpatial::create(da::Entity &entity) {
+    da::twod::SpatialBase *TestSpatial::create(da::Entity &entity) {
         if (entity.hasAttribute<SpriteAttribute>()) {
             return new TestSpatial(entity);
         }
@@ -66,7 +66,7 @@ namespace test {
         entity->addAttribute(sprite);
         
         // Create Transform attribute
-        entity->addAttribute(new attr::Transform());
+        entity->addAttribute(new da::twod::attr::Transform());
         
         // Create Depth attribute
         entity->addAttribute(new attr::Depth());

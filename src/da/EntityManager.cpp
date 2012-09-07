@@ -9,31 +9,34 @@ const char *EntityManager::updateBehaviorFuncName =
                                       "const da::BehaviorPtr &)";
 
 EntityManager::EntityManager() :
-mvNextId(0) {
+mNextId(0) {
     
 }
     
 EntityPtr EntityManager::create() {
-    EntityPtr ret(new Entity(++mvNextId));
+    // Create a new entity with the next available ID number
+    EntityPtr ret(new Entity(++mNextId));
     
-    mvEntities.push_back(ret);
-    mvEntitySearch[ret->getId()] = mvEntities.end() - 1;
+    // Add entity to list
+    mEntities.push_back(ret);
+    // Add entity to search list
+    mEntitySearch[ret->getId()] = mEntities.end() - 1;
     
     return ret;
 }
 
 void EntityManager::refresh(const EntityPtr &entity) {
     std::unordered_map<unsigned int, EntityIter>::iterator search =
-        mvEntitySearch.find(entity->getId());
+        mEntitySearch.find(entity->getId());
     
     // Can only refresh entities that exist in the EntityManager
-    if (search == mvEntitySearch.end()) {
+    if (search == mEntitySearch.end()) {
         return;
     }
     
     // Notify behaviors of changes
-    for (unsigned int i = 0; i < mvBehaviors.size(); i++) {
-        mvBehaviors[i]->refreshEntity(entity);
+    for (unsigned int i = 0; i < mBehaviors.size(); i++) {
+        mBehaviors[i]->refreshEntity(entity);
     }
 }
 
@@ -49,15 +52,15 @@ void EntityManager::remove(const EntityPtr &entity) {
     }
     
     std::unordered_map<unsigned int, EntityIter>::iterator search =
-        mvEntitySearch.find(entity->getId());
+        mEntitySearch.find(entity->getId());
     EntityRef ref(entity);
     
     // Check if entity exists from the EntityManager
-    if (search != mvEntitySearch.end()) {
+    if (search != mEntitySearch.end()) {
         
         // Remove entity from whatever groups it belonged to
         GroupMap::iterator groupIt;
-        for (groupIt = mvGroups.begin(); groupIt != mvGroups.end(); groupIt++) {
+        for (groupIt = mGroups.begin(); groupIt != mGroups.end(); groupIt++) {
             EntityGroup &group = groupIt->second;
             EntityGroup::iterator ent = group.find(ref);
             
@@ -67,8 +70,8 @@ void EntityManager::remove(const EntityPtr &entity) {
         }
         
         // Erase entity from active and search lists
-        mvEntities.erase(search->second);
-        mvEntitySearch.erase(search);
+        mEntities.erase(search->second);
+        mEntitySearch.erase(search);
     }
 }
 
@@ -77,17 +80,17 @@ void EntityManager::remove(const EntityRef &entity) {
 }
 
 void EntityManager::clear() {
-    mvGroups.clear();
-    mvEntitySearch.clear();
-    mvEntities.clear();
+    mGroups.clear();
+    mEntitySearch.clear();
+    mEntities.clear();
 }
 
 EntityRef EntityManager::get(unsigned int id) const {
     std::unordered_map<unsigned int, EntityIter>::const_iterator search =
-        mvEntitySearch.find(id);
+        mEntitySearch.find(id);
     EntityRef ret;
     
-    if (search != mvEntitySearch.end()) {
+    if (search != mEntitySearch.end()) {
         ret = *(search->second);
     }
     
@@ -101,11 +104,11 @@ void EntityManager::addToGroup(const EntityRef &entity,
     }
     
     // Only entities that exist in the EntityManager can be added to a group
-    if (mvEntitySearch.find(entity.lock()->getId()) == mvEntitySearch.end()) {
+    if (mEntitySearch.find(entity.lock()->getId()) == mEntitySearch.end()) {
         return;
     }
     
-    mvGroups[group].insert(entity);
+    mGroups[group].insert(entity);
 }
 
 void EntityManager::addToGroup(const EntityPtr &entity,
@@ -119,8 +122,8 @@ void EntityManager::removeFromGroup(const EntityRef &entity,
         return;
     }
     
-    GroupMap::iterator groupIt = mvGroups.find(group);
-    if (groupIt != mvGroups.end()) {
+    GroupMap::iterator groupIt = mGroups.find(group);
+    if (groupIt != mGroups.end()) {
         EntityGroup::iterator entityIt = groupIt->second.find(entity);
         if (entityIt != groupIt->second.end()) {
             groupIt->second.erase(entityIt);
@@ -134,15 +137,15 @@ void EntityManager::removeFromGroup(const EntityPtr &entity,
 }
 
 void EntityManager::removeGroup(const std::string &group) {
-    GroupMap::iterator groupIt = mvGroups.find(group);
-    if (groupIt != mvGroups.end()) {
-        mvGroups.erase(groupIt);
+    GroupMap::iterator groupIt = mGroups.find(group);
+    if (groupIt != mGroups.end()) {
+        mGroups.erase(groupIt);
     }
 }
 
 const EntityGroup &EntityManager::getGroup(const std::string &group) const {
-    GroupMap::const_iterator groupIt = mvGroups.find(group);
-    if (groupIt != mvGroups.end()) {
+    GroupMap::const_iterator groupIt = mGroups.find(group);
+    if (groupIt != mGroups.end()) {
         return groupIt->second;
     }
     
@@ -152,7 +155,7 @@ const EntityGroup &EntityManager::getGroup(const std::string &group) const {
 void EntityManager::addBehavior(const BehaviorPtr &behavior) {
     if (behavior) {
         behavior->initialize();
-        mvBehaviors.push_back(behavior);
+        mBehaviors.push_back(behavior);
     }
 }
 
@@ -163,6 +166,8 @@ void EntityManager::updateBehavior(const sf::Time &deltaTime,
             behavior->update(deltaTime);
         }
     } catch (std::exception &e) {
+        // __RELFILE__ is a custom macro that stores the relative path to the
+        // current file
         DAException except(__RELFILE__, __LINE__, updateBehaviorFuncName,
                            std::string("Error updating behavior: ") + e.what());
         throw except;

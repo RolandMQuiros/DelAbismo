@@ -11,30 +11,26 @@ DAException(where, line, source, what) {
 }
     
 Entity::Entity(unsigned int id) :
-mvId(id),
-mvActive(true) {
+mId(id),
+mActive(true) {
 
 }
 
 unsigned int Entity::getId() const {
-    return mvId;
-}
-
-unsigned long Entity::getAttributeBits() const {
-    return mvAttrBits;
+    return mId;
 }
 
 void Entity::setActive(bool active) {
-    mvActive = active;
+    mActive = active;
 }
 
 bool Entity::isActive() const {
-    return mvActive;
+    return mActive;
 }
 
 void Entity::addAttribute(const AttributePtr &attribute) {
     if (attribute) {        
-        mvAttributes[attribute->getTypeId()] = attribute;
+        mAttributes[attribute->getTypeId()] = attribute;
     }
 }
 
@@ -45,10 +41,10 @@ void Entity::addAttribute(AttributeBase *attribute) {
 }
 
 void Entity::removeAttribute(const AttributePtr &attribute) {
-    AttributeMap::iterator iter = mvAttributes.find(attribute->getTypeId());
+    AttributeMap::iterator iter = mAttributes.find(attribute->getTypeId());
     
-    if (iter != mvAttributes.end()) {
-        mvAttributes.erase(iter);
+    if (iter != mAttributes.end()) {
+        mAttributes.erase(iter);
     }
 }
 
@@ -59,7 +55,7 @@ void Entity::removeAttribute(const AttributeRef &attribute) {
 }
 
 bool Entity::hasNext(const Iterator &iterator) const {
-    return iterator != mvAttributes.end();
+    return iterator != mAttributes.end();
 }
 
 }

@@ -3,7 +3,7 @@
 namespace da {
 
 Behavior::Behavior() :
-mvIsActive(true) {
+mIsActive(true) {
     
 }
 
@@ -12,96 +12,82 @@ Behavior::~Behavior() {
 }
     
 void Behavior::setActive(bool active) {
-    mvIsActive = active;
+    mIsActive = active;
 }
 
 bool Behavior::isActive() const {
-    return mvIsActive;
+    return mIsActive;
 }
 
 void Behavior::refreshEntity(const EntityRef &entity) {
+    // Make sure we're not pointing to a dead object
     if (entity.expired()) {
         return;
     }
     
-    bool contains = mvActive.find(entity) != mvActive.end();
+    // Check if the entity already exists in the active list
+    bool contains = mActive.find(entity) != mActive.end();
+    
+    // Check if the entity is compatible
     bool compatible = isCompatible(*entity.lock());
     
     if (contains && !compatible) {
-        mvRemoved.push(entity);
+        mRemoved.push(entity);
         removedEntity(entity);
     } else if (!contains && compatible) {
-        mvAdded.push(entity);
+        mAdded.push(entity);
         addedEntity(entity);
     }
 }
 
 void Behavior::initialize() {
-    
+    // Put initialization code here
 }
 
 void Behavior::dispose() {
-    
+    // Put disposal code here
 }
 
 void Behavior::update(const sf::Time &deltaTime) {
-    while (!mvAdded.empty()) {
-        if (mvAdded.front().expired()) {
-            mvAdded.pop();
+    // Add entities to the active list
+    while (!mAdded.empty()) {
+        if (mAdded.front().expired()) {
+            mAdded.pop();
             continue;
         }
         
-        mvActive.insert(mvAdded.front());
-        mvAdded.pop();
+        mActive.insert(mAdded.front());
+        mAdded.pop();
     }
     
-    while (!mvRemoved.empty()) {
-        EntityGroup::iterator search = mvActive.find(mvRemoved.front());
-        if (search != mvActive.end()) {
-            mvActive.erase(search);
+    // Remove entities from the active list
+    while (!mRemoved.empty()) {
+        EntityGroup::iterator search = mActive.find(mRemoved.front());
+        if (search != mActive.end()) {
+            mActive.erase(search);
         }
-        mvRemoved.pop();
+        mRemoved.pop();
     }
     
-    mvDelta = deltaTime;
+    mDelta = deltaTime;
     
-    if (mvIsActive) {
-        updateEntities(mvActive);
+    if (mIsActive) {
+        updateEntities(mActive);
     }
 }
 
 const sf::Time &Behavior::getDelta() const {
-    return mvDelta;
+    return mDelta;
 }
 
 void Behavior::addEntity(const EntityRef &entity) {
     if (!entity.expired()) {
-        mvAdded.push(entity);
+        mAdded.push(entity);
     }
 }
 
 void Behavior::removeEntity(const EntityRef &entity) {
-    mvRemoved.push(entity);
-}
-
-void Behavior::cleanEntities() {
-    while (!mvAdded.empty()) {
-        if (mvAdded.front().expired()) {
-            mvAdded.pop();
-            continue;
-        }
-        
-        mvActive.insert(mvAdded.front());
-        mvAdded.pop();
-    }
-    
-    while (!mvRemoved.empty()) {
-        EntityGroup::iterator search = mvActive.find(mvRemoved.front());
-        if (search != mvActive.end()) {
-            mvActive.erase(search);
-        }
-        mvRemoved.pop();
-    }
+    mRemoved.push(entity);
 }
 
 bool Behavior::isCompatible(const Entity &entity) const {
