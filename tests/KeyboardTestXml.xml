@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<input type="keyboard">
+    <key name="up" button="W"/>
+    <key name="left" button="A"/>
+    <key name="down" button="S"/>
+    <key name="right" button="D"/>
+</input>
