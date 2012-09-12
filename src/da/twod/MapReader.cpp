@@ -8,7 +8,6 @@
 #include "da/twod/MapReader.h"
 
 namespace da {
-namespace twod {
 ////////////////////////////////////////////////////////////////////////////////
 
 void MapProperties::loadProperties(rapidxml::xml_node<> *node) {
@@ -298,5 +297,5 @@ MapReader::Exception::Exception(const std::string &where, unsigned long line,
                                 const std::string &source,
                                 const std::string &what) :
 da::DAException(where, line, source, what) { }
-}
+
 }

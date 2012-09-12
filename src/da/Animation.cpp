@@ -7,51 +7,51 @@
 namespace da {
     
 Animation::Animation() :
-mvPlay(false),
-mvReverse(false),
-mvFrame(0),
-mvFrameCount(0),
-mvLoop(0),
-mvLoopCount(0),
-mvSpeed(0.f),
-mvTime(0.f) {
+mPlay(false),
+mReverse(false),
+mFrame(0),
+mFrameCount(0),
+mLoop(0),
+mLoopCount(0),
+mSpeed(0.f),
+mTime(0.f) {
 }
 
 Animation::Animation(Animation const &other) :
-mvTexture(other.mvTexture),
-mvSprite(other.mvSprite),
-mvFrames(other.mvFrames),
-mvPlay(other.mvPlay),
-mvReverse(other.mvReverse),
-mvFrame(other.mvFrame),
-mvFrameCount(other.mvFrameCount),
-mvLoop(other.mvLoop),
-mvSpeed(other.mvTime),
-mvTime(other.mvTime) {
+mTexture(other.mTexture),
+mSprite(other.mSprite),
+mFrames(other.mFrames),
+mPlay(other.mPlay),
+mReverse(other.mReverse),
+mFrame(other.mFrame),
+mFrameCount(other.mFrameCount),
+mLoop(other.mLoop),
+mSpeed(other.mTime),
+mTime(other.mTime) {
 }
 
 Animation &Animation::operator=(Animation const &other) {
-    mvTexture = other.mvTexture;
-    mvSprite = other.mvSprite;
-    mvFrames = other.mvFrames;
-    mvPlay = other.mvPlay;
-    mvReverse = other.mvReverse;
-    mvFrame = other.mvFrame;
-    mvFrameCount = other.mvFrameCount;
-    mvLoop = other.mvLoop;
-    mvSpeed = other.mvTime;
-    mvTime = other.mvTime;
+    mTexture = other.mTexture;
+    mSprite = other.mSprite;
+    mFrames = other.mFrames;
+    mPlay = other.mPlay;
+    mReverse = other.mReverse;
+    mFrame = other.mFrame;
+    mFrameCount = other.mFrameCount;
+    mLoop = other.mLoop;
+    mSpeed = other.mTime;
+    mTime = other.mTime;
     
     return *this;
 }
 
 void Animation::setTexture(TexturePtr texture) {
-    mvTexture = texture;
-    mvSprite.setTexture(*mvTexture);
+    mTexture = texture;
+    mSprite.setTexture(*mTexture);
 }
 
 TexturePtr Animation::getTexture() const {
-    return mvTexture;
+    return mTexture;
 }
 
 void Animation::addFrame(sf::IntRect const &rect, sf::RenderStates states,
@@ -62,130 +62,130 @@ void Animation::addFrame(sf::IntRect const &rect, sf::RenderStates states,
     frame.color = color;
     
     // set first frame as the default
-    if (mvFrames.empty()) {
-        mvSprite.setTextureRect(rect);
-        mvSprite.setColor(color);
+    if (mFrames.empty()) {
+        mSprite.setTextureRect(rect);
+        mSprite.setColor(color);
     }
     
-    mvFrames.push_back(frame);
+    mFrames.push_back(frame);
 }
 
 void Animation::setFrame(unsigned int frame) {
-    if (frame < mvFrames.size()) {
-        mvFrame = frame;
+    if (frame < mFrames.size()) {
+        mFrame = frame;
     }
 }
 
 unsigned int Animation::getFrame() const {
-    return mvFrame;
+    return mFrame;
 }
 
 void Animation::setFramesPerSecond(float fps) {
     if (fps > 0.f) {
-        mvSpeed = 1.f / fps;
+        mSpeed = 1.f / fps;
     }
 }
 
 float Animation::getFramesPerSecond() const {
-    return 1.f / mvSpeed;
+    return 1.f / mSpeed;
 }
 
 void Animation::setSecondsPerFrame(float spf) {
-    mvSpeed = spf;
+    mSpeed = spf;
 }
 
 float Animation::getSecondsPerFrame() const {
-    return mvSpeed;
+    return mSpeed;
 }
 
 void Animation::setTime(float time) {
-    if (!mvFrames.empty()) {
-        mvSpeed = time / mvFrames.size();
+    if (!mFrames.empty()) {
+        mSpeed = time / mFrames.size();
     }
 }
 
 float Animation::getTime() const {
-    return mvSpeed * mvFrames.size();
+    return mSpeed * mFrames.size();
 }
 
 void Animation::setLoop(int loop) {
-    mvLoop = loop;
+    mLoop = loop;
 }
 
 int Animation::getLoop() const {
-    return mvLoop;
+    return mLoop;
 }
 
 void Animation::setReverse(bool reverse) {
-    mvReverse = reverse;
+    mReverse = reverse;
 }
 
 bool Animation::isReverse() const {
-    return mvReverse;
+    return mReverse;
 }
 
 void Animation::play() {
-    if (!mvFrames.empty()) {
-        mvPlay = true;
-        mvTime = 0.f;
+    if (!mFrames.empty()) {
+        mPlay = true;
+        mTime = 0.f;
 
-        mvFrameCount = 0;
-        mvLoopCount = mvLoop;
+        mFrameCount = 0;
+        mLoopCount = mLoop;
     }
 }
 
 void Animation::play(unsigned int frame) {
-    if (!mvFrames.empty()) {
-        mvPlay = true;
-        mvTime = 0.f;
+    if (!mFrames.empty()) {
+        mPlay = true;
+        mTime = 0.f;
 
-        mvFrame = frame;
-        mvFrameCount = 0;
-        mvLoopCount = mvLoop;
+        mFrame = frame;
+        mFrameCount = 0;
+        mLoopCount = mLoop;
     }
 }
 
 void Animation::stop() {
-    mvPlay = false;
-    mvTime = 0.f;
+    mPlay = false;
+    mTime = 0.f;
 }
 
 void Animation::stop(unsigned int frame) {
-    mvPlay = false;
-    mvTime = 0.f;
-    if (frame < mvFrames.size()) {
-        mvFrame = frame;
+    mPlay = false;
+    mTime = 0.f;
+    if (frame < mFrames.size()) {
+        mFrame = frame;
     }
 }
 
 bool Animation::isPlaying() const {
-    return mvPlay;
+    return mPlay;
 }
 
 bool Animation::isEmpty() const {
-    return mvFrames.empty() || !mvTexture;
+    return mFrames.empty() || !mTexture;
 }
 
 void Animation::update(const sf::Time &deltaTime) {
-    if (mvPlay) {
-        mvTime += deltaTime.asSeconds();
-        if (mvTime > mvSpeed) {
-            mvTime = 0.f;
-            mvFrame = (mvFrame + (mvReverse ? -1 : 1)) % mvFrames.size();
-            mvFrameCount++;
+    if (mPlay) {
+        mTime += deltaTime.asSeconds();
+        if (mTime > mSpeed) {
+            mTime = 0.f;
+            mFrame = (mFrame + (mReverse ? -1 : 1)) % mFrames.size();
+            mFrameCount++;
             
-            mvSprite.setTextureRect(mvFrames[mvFrame].rectangle);
-            mvSprite.setColor(mvFrames[mvFrame].color);
+            mSprite.setTextureRect(mFrames[mFrame].rectangle);
+            mSprite.setColor(mFrames[mFrame].color);
 
-            if (mvFrameCount >= mvFrames.size() && mvLoopCount != 0) {
-                mvFrameCount = 0;
+            if (mFrameCount >= mFrames.size() && mLoopCount != 0) {
+                mFrameCount = 0;
                 
-                if (mvLoopCount > 0) {
-                    mvLoopCount--;
+                if (mLoopCount > 0) {
+                    mLoopCount--;
                 }
                 
-                if (mvLoopCount == 0) {
-                    mvPlay = false;
+                if (mLoopCount == 0) {
+                    mPlay = false;
                 }
             }
         }
@@ -193,8 +193,8 @@ void Animation::update(const sf::Time &deltaTime) {
 }
 
 void Animation::draw(sf::RenderTarget &target, sf::RenderStates states) const {
-    if (!mvFrames.empty()) {
-        target.draw(mvSprite, states);
+    if (!mFrames.empty()) {
+        target.draw(mSprite, states);
     }
 }
     

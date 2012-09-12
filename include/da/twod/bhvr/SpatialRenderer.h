@@ -17,8 +17,8 @@
  * @see attr::Depth
  */
 
-#ifndef DA_TWOD_BHVR_SPATIALRENDERER_H
-#define DA_TWOD_BHVR_SPATIALRENDERER_H
+#ifndef DA_BHVR_SPATIALRENDERER_H
+#define DA_BHVR_SPATIALRENDERER_H
 
 #include <functional>
 #include <map>
@@ -30,7 +30,6 @@
 #include "da/twod/Spatial.h"
 
 namespace da {
-namespace twod {
 namespace bhvr {
 
 /**
@@ -112,7 +111,6 @@ public:
 
 };
 
-}
 }
 }
 

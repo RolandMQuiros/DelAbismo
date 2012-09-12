@@ -178,7 +178,7 @@ protected:
      *   entity to check
      * @return true if $entity is compatible, false otherwise
      */
-    virtual bool isCompatible(const Entity &entity) const;
+    virtual bool isCompatible(const Entity &entity) const=0;
     
     /**
      * Called when an Entity is successfully added to the active list

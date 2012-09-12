@@ -2,11 +2,10 @@
  * Superclass for every object that is a rectangle subdivided into tiles.
  */
 
-#ifndef DA_TWOD_TILERECT_H
-#define DA_TWOD_TILERECT_H
+#ifndef DA_TILERECT_H
+#define DA_TILERECT_H
 
 namespace da {
-namespace twod {
     
 class TileRect {
 public:
@@ -88,7 +87,5 @@ protected:
 };
 
 }
-}
 
 #endif
-

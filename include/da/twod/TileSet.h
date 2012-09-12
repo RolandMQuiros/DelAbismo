@@ -1,5 +1,5 @@
-#ifndef TWOD_TILESET_H
-#define TWOD_TILESET_H
+#ifndef DA_TILESET_H
+#define DA_TILESET_H
 
 #include <map>
 #include <vector>
@@ -13,7 +13,6 @@
 #include "da/twod/TileRect.h"
 
 namespace da {
-namespace twod {
 
 class TileSet : public TileRect {
 public:
@@ -51,7 +50,6 @@ private:
 typedef std::shared_ptr<TileSet> TileSetPtr;
 typedef std::weak_ptr<TileSet> TileSetRef;
 
-}
 }
 
 #endif

@@ -1,11 +1,10 @@
-#ifndef DA_TWOD_ATTR_DEPTH_H
-#define DA_TWOD_ATTR_DEPTH_H
+#ifndef DA_ATTR_DEPTH_H
+#define DA_ATTR_DEPTH_H
 
 #include <vector>
 #include "da/Attribute.h"
 
 namespace da {
-namespace twod {
 namespace attr {
 
 class Depth : public da::Attribute<Depth> {
@@ -27,7 +26,6 @@ private:
         
 };
 
-}
 }
 }
 

@@ -1,7 +1,6 @@
 #include "da/twod/TileSet.h"
 
 namespace da {
-namespace twod {
 
 TileSet::TileSet(da::TexturePtr texture, unsigned int tileWidth,
                  unsigned int tileHeight) try :
@@ -42,5 +41,4 @@ void TileSet::drawTile(sf::RenderTarget &dest, sf::RenderStates &states,
     drawTile(dest, states, tileIndex, pos.x, pos.y);
 }
 
-}
 }

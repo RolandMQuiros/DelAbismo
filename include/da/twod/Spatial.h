@@ -30,8 +30,8 @@
  * @see bhvr::SpatialRenderer
  */
 
-#ifndef DA_TWOD_SPATIAL_H
-#define DA_TWOD_SPATIAL_H
+#ifndef DA_SPATIAL_H
+#define DA_SPATIAL_H
 
 #include <unordered_map>
 #include <functional>
@@ -41,7 +41,6 @@
 #include "da/Entity.h"
 
 namespace da {
-namespace twod {
     
 typedef unsigned int SpatialId;
 
@@ -129,7 +128,6 @@ public:
 
 template <class Derived> SpatialId Spatial<Derived>::msTypeId = 0;
 
-}
 }
 
 #endif

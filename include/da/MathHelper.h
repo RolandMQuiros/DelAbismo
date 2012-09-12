@@ -8,6 +8,10 @@ namespace MathHelper {
     extern const float PiOverTwo;
     extern const float PiOverFour;
     extern const float PiOverEight;
+    extern const float ThreeSixty;
+    
+    float toRadians(float degrees);
+    float toDegrees(float radians);
 }
 }
 

@@ -165,13 +165,19 @@ public:
         Iterator iter = mAttributes.find(T::typeId());
         
         if (iter != mAttributes.end()) {
-            return *std::static_pointer_cast<T>(iter->second);
+            if (iter->second) {
+                return *std::static_pointer_cast<T>(iter->second);
+            } else {
+                std::stringstream err;
+                err << "Entity (id = " << getId() << ") contains expired "
+                    << "attribute (" << T::typeId() << ")";
+            }
         }
         
         std::stringstream err;
         
         err << "Entity (id = " << getId() << ") does not contain "
-            << " attribute (" << T::typeId() << ")";
+            << "attribute (" << T::typeId() << ")";
         
         // __RELFILE__ is a custom macro that stores the relative path to the
         // current file

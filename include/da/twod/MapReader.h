@@ -1,5 +1,5 @@
-#ifndef DA_TWOD_MAPREADER_H
-#define	DA_TWOD_MAPREADER_H
+#ifndef DA_MAPREADER_H
+#define	DA_MAPREADER_H
 
 #include <vector>
 #include <map>
@@ -14,7 +14,6 @@
 #include "rapidxml/rapidxml.hpp"
 
 namespace da {
-namespace twod {
 
 class MapProperties {
 public:
@@ -95,7 +94,6 @@ public:
     };
 };
 
-}
 }
 
 #endif

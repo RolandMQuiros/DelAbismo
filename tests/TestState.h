@@ -1,6 +1,7 @@
 #ifndef TEST_TESTSTATE_H
 #define TEST_TESTSTATE_H
 
+#include <functional>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
@@ -13,6 +14,8 @@ namespace test {
 
 class TestState : public da::State {
 public:
+    typedef std::function<void (const sf::Time &)> Updater;
+    
     TestState(da::Game &game);
     void update();
     void draw();
@@ -24,15 +27,22 @@ public:
     void addBehavior(const da::BehaviorPtr &behavior, bool renderer=false);
     void addBehavior(da::Behavior *behavior, bool renderer=false);
     
+    void addUpdater(Updater &updater);
+    
 private:
-    da::Game &mvGame;
-    da::EntityManager mvEntities;
+    da::Game &mGame;
+    da::EntityManager mEntities;
     
-    sf::Text mvDebugDisplay;
-    sf::Keyboard::Key mvExitCodes[10];
+    sf::Text mDebugDisplay;
+    sf::Keyboard::Key mExitCodes[10];
     
-    std::vector<da::BehaviorPtr> mvBehaviors;
-    std::vector<da::BehaviorPtr> mvRenderBehaviors;
+    std::vector<da::BehaviorPtr> mBehaviors;
+    std::vector<da::BehaviorPtr> mRenderBehaviors;
+    
+    sf::Time mFpsCounter;
+    sf::Text mFpsDisplay;
+    
+    std::vector<Updater> mUpdaters;
 };
 
 }

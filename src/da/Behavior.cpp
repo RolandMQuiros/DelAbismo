@@ -90,10 +90,6 @@ void Behavior::removeEntity(const EntityRef &entity) {
     mRemoved.push(entity);
 }
 
-bool Behavior::isCompatible(const Entity &entity) const {
-    return false;
-}
-
 void Behavior::addedEntity(const EntityRef &entity) {
     
 }

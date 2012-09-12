@@ -4,7 +4,6 @@
 #include "da/twod/bhvr/SpatialRenderer.h"
 
 namespace da {
-namespace twod {
 namespace bhvr {
 
 bool spatialLess(const std::shared_ptr<SpatialBase> &a,
@@ -56,6 +55,5 @@ void SpatialRenderer::updateEntities(EntityGroup &entities) {
     }
 }
 
-}
 }
 }

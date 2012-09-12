@@ -201,21 +201,21 @@ private:
         sf::Color color;
     };
     
-    TexturePtr mvTexture;
-    sf::Sprite mvSprite;
-    std::vector<Frame> mvFrames;
+    TexturePtr mTexture;
+    sf::Sprite mSprite;
+    std::vector<Frame> mFrames;
 
-    bool mvPlay;
-    bool mvReverse;
+    bool mPlay;
+    bool mReverse;
 
-    unsigned int mvFrame;
-    unsigned int mvFrameCount;
+    unsigned int mFrame;
+    unsigned int mFrameCount;
 
-    int mvLoop;
-    int mvLoopCount;
+    int mLoop;
+    int mLoopCount;
 
-    float mvSpeed;
-    float mvTime;
+    float mSpeed;
+    float mTime;
     
     /** 
      * Renders this animation
