@@ -4,6 +4,7 @@
 #include <memory>
 #include <sstream>
 #include <unordered_map>
+#include <vector>
 #include <set>
 
 #include "da/Attribute.h"
@@ -26,11 +27,7 @@ namespace da {
  * @see da::Behavior
  */
 class Entity {
-private:
-    typedef std::unordered_map<unsigned int, AttributePtr> AttributeMap;
-public:
-    typedef AttributeMap::const_iterator Iterator;
-    
+public:    
     /**
      * Internal exception.
      */
@@ -111,10 +108,8 @@ public:
      *   type of Attribute to remove
      */
     template <class T> void removeAttribute() {
-        AttributeMap::iterator iter = mAttributes.find(T::typeId());
-        
-        if (iter != mAttributes.end()) {
-            mAttributes.erase(iter);
+        if (T::typeId() <= mAttributes.size() && mAttributes[T::typeId()-1]) {
+            mAttributes[T::typeId()-1] = AttributePtr();
         }
     }
     
@@ -125,10 +120,9 @@ public:
      * @return
      *   true if Attribute exists, false otherwise
      */
-    template <class T> bool hasAttribute() const {
-        Iterator iter = mAttributes.find(T::typeId());
-        bool ret = iter != mAttributes.end() &&
-                   iter->second;
+    template <class T> bool hasAttribute() const {        
+        bool ret = (T::typeId() <= mAttributes.size()) &&
+                    mAttributes[T::typeId()-1];
         
         return ret;
     }
@@ -142,11 +136,10 @@ public:
      *   otherwise
      */
     template <class T> std::weak_ptr<T> getAttributeRef() const {
-        Iterator iter = mAttributes.find(T::typeId());
         std::weak_ptr<T> ret;
         
-        if (iter != mAttributes.end()) {
-            ret = std::static_pointer_cast<T>(iter->second);
+        if (hasAttribute<T>()) {
+            ret = std::static_pointer_cast<T>(mAttributes[T::typeId()-1]);
         }
         
         return ret;
@@ -162,11 +155,9 @@ public:
      *   Entity::Exception
      */
     template <class T> T &getAttribute() const {
-        Iterator iter = mAttributes.find(T::typeId());
-        
-        if (iter != mAttributes.end()) {
-            if (iter->second) {
-                return *std::static_pointer_cast<T>(iter->second);
+        if (hasAttribute<T>()) {
+            if (mAttributes[T::typeId()-1]) {
+                return *std::static_pointer_cast<T>(mAttributes[T::typeId()-1]);
             } else {
                 std::stringstream err;
                 err << "Entity (id = " << getId() << ") contains expired "
@@ -185,30 +176,12 @@ public:
                         "Entity::getAttribute<T>() const", err.str());
     }
     
-    /**
-     * Returns an iterator to the first element in this Entity's Attribute map
-     * da::Entity stores Attributes in an std::unordered_set.  Thus, the
-     * iterator returned here has a ->first and ->second member which hold the
-     * Attribute's type ID and the Attribute itself, respectively.
-     * @return
-     *   iterator to the first element in the Attribute map
-     */
-    Iterator getIterator() const;
-    
-    /**
-     * Returns whether or not an iterator has a subsequent Attribute.
-     * @param $iterator
-     *   iterator to check
-     * @return
-     *   true if there is a following element, false otherwise.
-     */
-    bool hasNext(const Iterator &iterator) const;
 private:
     unsigned int mId;
     unsigned long mAttrBits;
     bool mActive;
     
-    AttributeMap mAttributes;
+    std::vector<AttributePtr> mAttributes;
 };
 
 /** Smart pointer to an Entity.  Use this when ownership is shared */

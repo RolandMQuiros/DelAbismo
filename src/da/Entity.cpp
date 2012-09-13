@@ -29,8 +29,12 @@ bool Entity::isActive() const {
 }
 
 void Entity::addAttribute(const AttributePtr &attribute) {
-    if (attribute) {        
-        mAttributes[attribute->getTypeId()] = attribute;
+    if (attribute->getTypeId() > mAttributes.size()) {
+        mAttributes.resize(attribute->getTypeId());
+    }
+    
+    if (attribute) {
+        mAttributes[attribute->getTypeId()-1] = attribute;
     }
 }
 
@@ -41,10 +45,9 @@ void Entity::addAttribute(AttributeBase *attribute) {
 }
 
 void Entity::removeAttribute(const AttributePtr &attribute) {
-    AttributeMap::iterator iter = mAttributes.find(attribute->getTypeId());
-    
-    if (iter != mAttributes.end()) {
-        mAttributes.erase(iter);
+    unsigned int index = attribute->getTypeId();
+    if (index <= mAttributes.size() && mAttributes[index]) {
+        mAttributes[index] = AttributePtr();
     }
 }
 
@@ -52,10 +55,6 @@ void Entity::removeAttribute(const AttributeRef &attribute) {
     if (!attribute.expired()) {
         removeAttribute(attribute.lock());
     }
-}
-
-bool Entity::hasNext(const Iterator &iterator) const {
-    return iterator != mAttributes.end();
 }
 
 }

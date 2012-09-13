@@ -57,12 +57,12 @@ TEST_F(EntityEnvironment, DirectedAnimationTest) {
     attr::DirectedAnimation *dirAnim = new attr::DirectedAnimation;
     
     da::TexturePtr texture = Game.content.load<sf::Texture>(
-        "../../content/textures/directionTest.png");
+        "directionTest.png");
     
     for (unsigned int i = 0; i < 8; i++) {
         da::Animation temp;
         temp.setTexture(texture);
-        temp.setSecondsPerFrame(1.f);
+        temp.setSecondsPerFrame(5.f);
         temp.setLoop(-1);
         
         temp.addFrame(sf::IntRect(0, 32 * i, 32, 32));
@@ -76,7 +76,7 @@ TEST_F(EntityEnvironment, DirectedAnimationTest) {
     State->refreshEntity(entity);
     
     // Benchmark entities
-    for (unsigned int i = 0; i < 10000; i++) {
+    for (unsigned int i = 0; i < 100; i++) {
         da::EntityPtr bmEntity = State->createEntity();
         
         da::attr::Transform *transform = new da::attr::Transform;
