@@ -15,6 +15,7 @@
 
 #define __RELFILE__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : \
                                                       __FILE__)
+#define __EXCEPTSRC__ __RELFILE__, __LINE__, __func__
 
 namespace da {
 

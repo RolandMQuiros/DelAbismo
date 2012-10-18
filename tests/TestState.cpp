@@ -37,7 +37,7 @@ void TestState::update() {
     }
     
     for (unsigned int i = 0; i < mUpdaters.size(); i++) {
-        mUpdaters[i](mGame.getFrameTime());
+        mUpdaters[i](mGame, mGame.getFrameTime());
     }
     
     mFpsCounter += mGame.getFrameTime();
@@ -58,6 +58,10 @@ void TestState::draw() {
         if (mRenderBehaviors[i]) {
             mRenderBehaviors[i]->update(mGame.getFrameTime());
         }
+    }
+    
+    for (unsigned int i = 0; i < mRenderers.size(); i++) {
+        mRenderers[i](mGame, sf::RenderStates());
     }
     
     mGame.draw(mDebugDisplay);
@@ -96,6 +100,10 @@ void TestState::addBehavior(da::Behavior *behavior, bool renderer) {
 
 void TestState::addUpdater(Updater &updater) {
     mUpdaters.push_back(updater);
+}
+
+void TestState::addRenderer(Renderer &renderer) {
+    mRenderers.push_back(renderer);
 }
 
 }

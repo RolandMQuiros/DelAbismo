@@ -10,7 +10,7 @@ public:
     virtual ~EntityBehavior();
 
 protected:
-    void updateEntities(EntityGroup &entities);
+    virtual void updateEntities(EntityGroup &entities);
     
     virtual void begin();
     virtual void updateEntity(Entity &entity)=0;

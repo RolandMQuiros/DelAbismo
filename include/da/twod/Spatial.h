@@ -38,6 +38,7 @@
 #include <memory>
 
 #include <SFML/Graphics/Drawable.hpp>
+
 #include "da/Entity.h"
 
 namespace da {

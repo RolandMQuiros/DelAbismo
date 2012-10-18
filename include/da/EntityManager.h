@@ -158,8 +158,7 @@ public:
                   const std::string &source, const std::string &what);
     };
 private:
-    typedef std::unordered_map<std::string, EntityGroup,
-                               std::hash<const std::string &> > GroupMap;
+    typedef std::unordered_map<std::string, EntityGroup> GroupMap;
     typedef std::vector<EntityPtr>::iterator EntityIter;
     
     static const EntityGroup emptyGroup;

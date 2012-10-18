@@ -14,7 +14,9 @@ namespace test {
 
 class TestState : public da::State {
 public:
-    typedef std::function<void (const sf::Time &)> Updater;
+    typedef std::function<void (da::Game &game, const sf::Time &)> Updater;
+    typedef std::function<void (sf::RenderTarget &target,
+                                sf::RenderStates states)> Renderer;
     
     TestState(da::Game &game);
     void update();
@@ -28,6 +30,7 @@ public:
     void addBehavior(da::Behavior *behavior, bool renderer=false);
     
     void addUpdater(Updater &updater);
+    void addRenderer(Renderer &renderer);
     
 private:
     da::Game &mGame;
@@ -43,6 +46,7 @@ private:
     sf::Text mFpsDisplay;
     
     std::vector<Updater> mUpdaters;
+    std::vector<Renderer> mRenderers;
 };
 
 }

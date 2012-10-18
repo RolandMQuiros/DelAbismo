@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
-#include <da/Animation.h>
+#include <da/twod/Animation.h>
 #include <sstream>
 
 int main() {
@@ -17,9 +17,11 @@ int main() {
     
     da::Animation animation;
     animation.setTexture(texture);
-    animation.setSecondsPerFrame(0.4f);
-    animation.addFrame(sf::IntRect(0, 0, 32, 32));
-    animation.addFrame(sf::IntRect(32, 0, 32, 32));
+    animation.addFrame(sf::IntRect(0, 0, 32, 32),
+                       sf::seconds(1.f));
+    animation.addFrame(sf::IntRect(32, 0, 32, 32),
+                       sf::seconds(0.2f));
+    animation.setRepeat(-1);
     animation.play();
     
     sf::RenderStates matrices[10000];
