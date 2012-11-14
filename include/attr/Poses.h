@@ -7,6 +7,7 @@
 
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Time.hpp>
+#include <SFML/System/Vector2.hpp>
 
 #include <da/Attribute.h>
 
@@ -16,53 +17,43 @@ namespace bhvr {
 
 namespace attr {
 
+/**
+ * Holds a dictionary of frames, each a subrectangle of the sprite texture.
+ * Consequently, relies on attr::Sprite to display properly.
+ * Each frame is displayed for a certain amount of time, defined by
+ * Poses::timePerFrame.
+ */
 class Poses : public da::Attribute<Poses> {
 public:
-    Poses();
+    /** Whether or not to use this Attribute for rendering */
+    bool isEnabled;
+    /** Whether we can manually change the current pose. Used for scene
+        scripts */
+    bool isLocked;
     
-    void setEnabled(bool enabled);
-    bool isEnabled() const;
+    bool isLoop;
+    bool isReverse;
+    
+    sf::Time time;
+    sf::Time timePerFrame;
+    
+    Poses();
     
     unsigned int getPoseCount() const;
     bool hasPose(const std::string &name) const;
     void addFrame(const std::string &name, const sf::IntRect &frame);
     unsigned int getFrameCount(const std::string &poseName) const;
     
-    void setLooping(bool loop);
-    bool isLooping() const;
-    
-    void setReverse(bool reverse);
-    bool isReverse() const;
-    
     bool nextFrame();
-    void setCurrentPose(const std::string &poseName, unsigned int frame=0);
-    void setCurrentFrame(unsigned int frame);
-    unsigned int getCurrentFrame() const;
-    
-    /**
-     * Sets amount of time per frame
-     */
-    void setTimePerFrame(const sf::Time &time);
-    const sf::Time &getTimePerFrame() const;
-    
-    void update(const sf::Time &deltaTime);
+    void setCurrentFrame(const std::string &poseName, unsigned int index=0);
+    sf::IntRect getCurrentFrame() const;
+    unsigned int getCurrentFrameIndex() const;
 private:
-    friend class bhvr::Poses;
-    typedef std::unordered_map<const char *, std::vector<sf::IntRect> >
-        PoseMap;
-
-    bool mIsEnabled;
+    typedef std::unordered_map<const char *, std::vector<sf::IntRect> > PoseMap;
     PoseMap mPoses;
-    
-    bool mIsLoop;
-    bool mIsReverse;
-    
-    sf::Time mTime;
-    sf::Time mTimePerFrame;
     
     PoseMap::iterator mCurrentPose;
     unsigned int mCurrentFrame;
-    
 };
 
 }

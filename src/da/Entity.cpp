@@ -28,12 +28,12 @@ bool Entity::isActive() const {
     return mActive;
 }
 
-void Entity::addAttribute(const AttributePtr &attribute) {
-    if (attribute->getTypeId() > mAttributes.size()) {
-        mAttributes.resize(attribute->getTypeId());
-    }
-    
+void Entity::addAttribute(const AttributePtr &attribute) {       
     if (attribute) {
+        if (attribute->getTypeId() > mAttributes.size()) {
+            mAttributes.resize(attribute->getTypeId());
+        }
+        
         mAttributes[attribute->getTypeId()-1] = attribute;
     }
 }
@@ -55,6 +55,10 @@ void Entity::removeAttribute(const AttributeRef &attribute) {
     if (!attribute.expired()) {
         removeAttribute(attribute.lock());
     }
+}
+
+unsigned int Entity::getAttributeCount() const {
+    return mAttributes.size();
 }
 
 }

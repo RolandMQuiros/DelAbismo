@@ -16,7 +16,7 @@ private:
     bool isCompatible(const da::Entity &entity) const;
     
     void updateEntities(da::EntityGroup &entities);
-    bool moveEntity(da::Entity &entity);
+    bool moveEntity(const da::EntityPtr &entity);
 };
 
 }

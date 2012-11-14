@@ -102,6 +102,8 @@ public:
      */
     void removeAttribute(const AttributeRef &attribute);
     
+    unsigned int getAttributeCount() const;
+    
     /**
      * Removes an Attribute from this
      * @tparam $T
@@ -120,9 +122,9 @@ public:
      * @return
      *   true if Attribute exists, false otherwise
      */
-    template <class T> bool hasAttribute() const {        
-        bool ret = (T::typeId() <= mAttributes.size()) &&
-                    mAttributes[T::typeId()-1];
+    template <class T> bool hasAttribute() const {
+        bool ret = T::typeId() <= mAttributes.size() &&
+                   mAttributes[T::typeId()-1];
         
         return ret;
     }

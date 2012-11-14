@@ -45,3 +45,26 @@ int directionToDegrees(CardinalDirection direction) {
             return -1.f;
     }
 }
+
+std::string directionToString(CardinalDirection direction) {
+    switch (direction) {
+        case East:
+            return "east";
+        case SouthEast:
+            return "southeast";
+        case South:
+            return "south";
+        case SouthWest:
+            return "southwest";
+        case West:
+            return "west";
+        case NorthWest:
+            return "northwest";
+        case North:
+            return "north";
+        case NorthEast:
+            return "northeast";
+        default:
+            return "";
+    }
+}

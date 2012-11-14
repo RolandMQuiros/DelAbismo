@@ -15,14 +15,14 @@ bool MotionMover::isCompatible(const da::Entity &entity) const {
 void MotionMover::updateEntities(da::EntityGroup &entities) {
     da::EntityGroup::iterator iter;
     for (iter = entities.begin(); iter != entities.end(); iter++) {
-        if (moveEntity(*iter->lock())) {
+        if (moveEntity(iter->lock())) {
             emptyQueueHandler(*iter);
         }
     }
 }
 
-bool MotionMover::moveEntity(da::Entity &entity) {
-    attr::MotionQueue &queue = entity.getAttribute<attr::MotionQueue>();
+bool MotionMover::moveEntity(const da::EntityPtr &entity) {
+    attr::MotionQueue &queue = entity->getAttribute<attr::MotionQueue>();
     
     // Early out
     if (queue.motions.empty()) {
@@ -30,7 +30,7 @@ bool MotionMover::moveEntity(da::Entity &entity) {
     }
     
     attr::MotionQueue::Motion &motion = queue.motions.front();
-    da::attr::Transform &xform = entity.getAttribute<da::attr::Transform>();
+    da::attr::Transform &xform = entity->getAttribute<da::attr::Transform>();
     
     // Get distances    
     float dp = getDelta().asSeconds() * motion.speed;

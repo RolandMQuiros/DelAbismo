@@ -80,7 +80,7 @@ public:
      * @return type ID
      */
     AttributeId getTypeId() const {
-        return msTypeId;
+        return typeId();
     }
 
 };

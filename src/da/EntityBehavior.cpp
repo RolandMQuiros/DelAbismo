@@ -13,7 +13,7 @@ void EntityBehavior::updateEntities(EntityGroup &entities) {
         if (iter->expired()) {
             removeEntity(*iter);
         } else {
-            updateEntity(*iter->lock());
+            updateEntity(iter->lock());
         }
     }
     end();

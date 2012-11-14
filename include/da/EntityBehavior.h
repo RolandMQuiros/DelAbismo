@@ -13,7 +13,7 @@ protected:
     virtual void updateEntities(EntityGroup &entities);
     
     virtual void begin();
-    virtual void updateEntity(Entity &entity)=0;
+    virtual void updateEntity(const EntityPtr &entity)=0;
     virtual void end();
 };
 

@@ -1,6 +1,8 @@
 #ifndef CARDINALDIRECTION_H
 #define CARDINALDIRECTION_H
 
+#include <string>
+
 enum CardinalDirection {
     East = 0,
     SouthEast = 1,
@@ -15,5 +17,6 @@ enum CardinalDirection {
 
 float directionToRadians(CardinalDirection direction);
 int directionToDegrees(CardinalDirection direction);
+std::string directionToString(CardinalDirection direction);
 
 #endif
