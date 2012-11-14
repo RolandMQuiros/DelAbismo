@@ -9,9 +9,7 @@
 
 #include "bhvr/Walker.h"
 
-
 #define DELTA_THRESH 0.002f
-#define NUM_SLICES 8 // Number of unique directions we want to render
 
 namespace bhvr {
 
@@ -23,6 +21,13 @@ bool Walker::isCompatible(const da::Entity &entity) const {
 }
 
 void Walker::updateEntity(const da::EntityPtr &entity) {
+    // Only update once per millisecond
+    mTime += getDelta();
+    if (mTime < sf::milliseconds(1)) {
+        return;
+    }
+    mTime = sf::Time::Zero;
+    
     // Get attributes
     da::attr::Transform &xform = entity->getAttribute<da::attr::Transform>();
     attr::Poses &poses = entity->getAttribute<attr::Poses>();
@@ -31,12 +36,14 @@ void Walker::updateEntity(const da::EntityPtr &entity) {
         entity->getAttribute<attr::Person>().previousPosition;
     
     // Make sure they're enabled.  Early out if they're not.
-    if (!poses.isEnabled || ! sprite.isEnabled()) {
+    if (!poses.isEnabled || !sprite.isEnabled()) {
         return;
     }
     
     // Get change in position
-    sf::Vector2f deltaPos = prevPos - xform.getPosition();
+    sf::Vector2f deltaPos = xform.getPosition() - prevPos;
+    prevPos = xform.getPosition();
+    
     float distance = da::MathHelper::length(deltaPos.x, deltaPos.y);
     
     // Don't bother if the distance is too small.  We may regret this on the
@@ -45,18 +52,26 @@ void Walker::updateEntity(const da::EntityPtr &entity) {
         return;
     }
     
-    // Calculate the angle of movement.  Remember, atan2 yields [-pi, +pi].
+    // Calculate the angle of movement.
     float angle = atan2(deltaPos.y, deltaPos.x);
     
-    // Calculate which eighth of the 360 degree pie our entity is moving in.
-    // This will yield a number in the range [-NUM_SLICES/2, +NUM_SLICES/2]
-    int region = (angle / da::MathHelper::TwoPi) * NUM_SLICES;
+    // atan2 yields [-pi, +pi], so let's correct it to something more palatable:
+    // [0, 2pi]
+    if (angle < 0.f) {
+        angle += da::MathHelper::TwoPi;
+    }
     
-    // Correlate the region to direction
-    CardinalDirection direction = (CardinalDirection)(region + NUM_SLICES/2);
-    
-    // Set the appropriate pose
-    poses.setCurrentFrame(directionToString(direction), 
+    // Threshold checking
+    float center = 0.f;
+    for (unsigned int i = 0; i < DirectionCount; i++) {        
+        if (angle > center - da::MathHelper::PiOverEight &&
+            angle <= center + da::MathHelper::PiOverEight) {
+            poses.direction = (CardinalDirection)i;
+            break;
+        }
+        
+        center += da::MathHelper::PiOverFour;
+    }
 }
 
 }

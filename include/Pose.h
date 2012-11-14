@@ -21,7 +21,7 @@ class Pose {
 public:
     struct Frame {
         sf::IntRect rect;
-        sf::Vector2i origin;
+        sf::Vector2f origin;
     };
     
     /**
@@ -29,13 +29,17 @@ public:
      * @param $frames
      *   Number of frames per animation stored in this Pose
      */
-    Pose(unsigned int frames);
+    Pose(unsigned int frames=1);
+    
+    Pose(const Pose &other);
+    Pose &operator=(const Pose &other);
     
     /**
      * Sets the frame for the given direction and index
      */
     void setFrame(CardinalDirection direction, unsigned int index,
                   const Frame &frame);
+    void setFrames(CardinalDirection direction, Frame *frames);
     
     /**
      * Retrieves the frame for the given direction and index

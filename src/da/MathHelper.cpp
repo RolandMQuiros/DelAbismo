@@ -33,5 +33,17 @@ float length(float x, float y) {
     return sqrt(x*x + y*y);
 }
 
+void normalize(float x, float y, float &rx, float &ry) {
+    float l = length(x, y);
+    
+    if (l != 0.f) {
+        rx = x / l;
+        ry = y / l;
+    } else {
+        rx = x;
+        ry = y;
+    }
+}
+
 }
 }

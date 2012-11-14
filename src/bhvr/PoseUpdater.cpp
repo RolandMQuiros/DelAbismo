@@ -38,7 +38,10 @@ void PoseUpdater::updateEntity(const da::EntityPtr &entity) {
     }
     
     // Apply to sprite
-    sprite.setTextureRect(poses.getCurrentFrame());
+    Pose::Frame frame = poses.getFrame();
+    
+    sprite.setTextureRect(frame.rect);
+    sprite.setOrigin(frame.origin);
 }
 
 }

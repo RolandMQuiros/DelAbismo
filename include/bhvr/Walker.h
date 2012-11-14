@@ -11,6 +11,8 @@ namespace bhvr {
  */
 class Walker : public da::EntityBehavior {
 private:
+    sf::Time mTime;
+    
     bool isCompatible(const da::Entity &entity) const;
     void updateEntity(const da::EntityPtr &entity);
 };

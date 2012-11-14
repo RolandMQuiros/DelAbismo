@@ -5,15 +5,10 @@
 #include <unordered_map>
 #include <vector>
 
-#include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Time.hpp>
-#include <SFML/System/Vector2.hpp>
-
 #include <da/Attribute.h>
 
-namespace bhvr {
-    class Poses;
-}
+#include "Pose.h"
 
 namespace attr {
 
@@ -25,35 +20,31 @@ namespace attr {
  */
 class Poses : public da::Attribute<Poses> {
 public:
-    /** Whether or not to use this Attribute for rendering */
     bool isEnabled;
-    /** Whether we can manually change the current pose. Used for scene
-        scripts */
     bool isLocked;
-    
-    bool isLoop;
     bool isReverse;
+    bool isLoop;
+    
+    CardinalDirection direction;
     
     sf::Time time;
     sf::Time timePerFrame;
     
     Poses();
     
-    unsigned int getPoseCount() const;
-    bool hasPose(const std::string &name) const;
-    void addFrame(const std::string &name, const sf::IntRect &frame);
-    unsigned int getFrameCount(const std::string &poseName) const;
+    void addPose(const std::string &name, const Pose &pose);
+    void setPose(const std::string &name, unsigned int index=0);
+    
+    void setFrame(unsigned int index);
+    Pose::Frame getFrame() const;
     
     bool nextFrame();
-    void setCurrentFrame(const std::string &poseName, unsigned int index=0);
-    sf::IntRect getCurrentFrame() const;
-    unsigned int getCurrentFrameIndex() const;
 private:
-    typedef std::unordered_map<const char *, std::vector<sf::IntRect> > PoseMap;
-    PoseMap mPoses;
-    
-    PoseMap::iterator mCurrentPose;
-    unsigned int mCurrentFrame;
+    std::unordered_map<const char *, Pose> mPoses;
+    std::unordered_map<const char *, Pose>::const_iterator mCurrentPose;
+
+    unsigned int mFrameIndex;
+
 };
 
 }

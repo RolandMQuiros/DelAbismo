@@ -4,31 +4,44 @@ namespace attr {
 
 Poses::Poses() :
 isEnabled(true),
+isLocked(false),
 isLoop(true),
 isReverse(false),
+direction(South),
 mCurrentPose(mPoses.end()),
-mCurrentFrame(0) {
+mFrameIndex(0) {
     
 }
 
-unsigned int Poses::getPoseCount() const {
-    return mPoses.size();
+void Poses::addPose(const std::string &name, const Pose &pose) {
+    mPoses[name.c_str()] = pose;
 }
 
-bool Poses::hasPose(const std::string &poseName) const {
-    return mPoses.find(poseName.c_str()) == mPoses.end();
-}
-
-void Poses::addFrame(const std::string &name, const sf::IntRect &frame) {
-    mPoses[name.c_str()].push_back(frame);
-}
-
-unsigned int Poses::getFrameCount(const std::string &poseName) const {
-    unsigned int ret = 0;
+void Poses::setPose(const std::string &name, unsigned int index) {
+    std::unordered_map<const char *, Pose>::const_iterator iter =
+        mPoses.find(name.c_str());
     
-    PoseMap::const_iterator search = mPoses.find(poseName.c_str());
-    if (search != mPoses.end()) {
-        ret = search->second.size();
+    if (iter == mPoses.end()) {
+        return;
+    }
+    
+    if (iter->second.getFrameCount() > index) {
+        mCurrentPose = iter;
+        mFrameIndex = index;
+    }
+}
+
+void Poses::setFrame(unsigned int index) {
+    if (mCurrentPose->second.getFrameCount() > index) {
+        mFrameIndex = index;
+    }
+}
+
+Pose::Frame Poses::getFrame() const {
+    Pose::Frame ret;
+    
+    if (mCurrentPose != mPoses.end()) {
+        ret = mCurrentPose->second.getFrame(direction, mFrameIndex);
     }
     
     return ret;
@@ -36,14 +49,14 @@ unsigned int Poses::getFrameCount(const std::string &poseName) const {
 
 bool Poses::nextFrame() {
     if (mCurrentPose != mPoses.end()) {
-        unsigned int numFrames = mCurrentPose->second.size();
+        unsigned int numFrames = mCurrentPose->second.getFrameCount();
         
-        if (mCurrentFrame < numFrames) {
+        if (mFrameIndex < numFrames) {
             // Decrement if reversed
-            mCurrentFrame += (isReverse) ? -1 : 1;
+            mFrameIndex += (isReverse) ? -1 : 1;
             
             if (isLoop) {
-                mCurrentFrame %= numFrames;
+                mFrameIndex %= numFrames;
             }
             
             return true;
@@ -53,25 +66,4 @@ bool Poses::nextFrame() {
     return false;
 }
 
-void Poses::setCurrentFrame(const std::string &poseName, unsigned int index) {
-    if (isLocked) {
-        return;
-    }
-    
-    PoseMap::iterator search = mPoses.find(poseName.c_str());
-    if (search != mPoses.end() && index < search->second.size()) {
-        mCurrentPose = search;
-        mCurrentFrame = index;
-    }
-}
-
-sf::IntRect Poses::getCurrentFrame() const {
-    if (mCurrentPose != mPoses.end() &&
-        mCurrentFrame < mCurrentPose->second.size()) {
-        return mCurrentPose->second[mCurrentFrame];
-    }
-    
-    return sf::IntRect();
-}
-    
 }

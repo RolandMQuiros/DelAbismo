@@ -15,6 +15,8 @@ namespace MathHelper {
     
     float distance(float x1, float y1, float x2, float y2);
     float length(float x, float y);
+    
+    void normalize(float x, float y, float &rx, float &ry);
 }
 }
 
