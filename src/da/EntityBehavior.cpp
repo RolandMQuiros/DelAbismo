@@ -7,7 +7,7 @@ EntityBehavior::~EntityBehavior() {
 }
 
 void EntityBehavior::updateEntities(EntityGroup &entities) {
-    begin();
+    begin(entities);
     for (EntityGroup::iterator iter = entities.begin();
          iter != entities.end(); iter++) {
         if (iter->expired()) {
@@ -16,14 +16,14 @@ void EntityBehavior::updateEntities(EntityGroup &entities) {
             updateEntity(iter->lock());
         }
     }
-    end();
+    end(entities);
 }
 
-void EntityBehavior::begin() {
+void EntityBehavior::begin(EntityGroup &entities) {
     
 }
 
-void EntityBehavior::end() {
+void EntityBehavior::end(EntityGroup &entities) {
 }
 
 }

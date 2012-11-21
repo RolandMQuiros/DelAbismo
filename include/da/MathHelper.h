@@ -17,6 +17,12 @@ namespace MathHelper {
     float length(float x, float y);
     
     void normalize(float x, float y, float &rx, float &ry);
+    float dot(float x1, float y1, float x2, float y2);
+    
+    /**
+     * 2D cross product.  Returns scalar.
+     */
+    float cross(float x1, float y1, float x2, float y2);
 }
 }
 
