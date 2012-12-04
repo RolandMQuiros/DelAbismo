@@ -1,5 +1,5 @@
-#ifndef SPATIAL_SPRITE_H
-#define SPATIAL_SPRITE_H
+#ifndef SPRITESPATIAL_H
+#define SPRITESPATIAL_H
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -8,20 +8,16 @@
 
 #include "attr/Sprite.h"
 
-namespace spatial {
-
-class Sprite : public da::Spatial<Sprite> {
+class SpriteSpatial : public da::Spatial<SpriteSpatial> {
 public:
     static da::SpatialBase *create(da::Entity &entity);
     
-    Sprite(da::Entity &entity);
+    SpriteSpatial(da::Entity &entity);
 private:
     da::attr::Transform &mTransform;
     attr::Sprite &mSprite;
     
     void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };
-
-}
 
 #endif

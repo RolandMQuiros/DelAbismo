@@ -1,8 +1,6 @@
-#include "spatial/Sprite.h"
+#include "SpriteSpatial.h"
 
-namespace spatial {
-
-da::SpatialBase *Sprite::create(da::Entity &entity) {
+da::SpatialBase *SpriteSpatial::create(da::Entity &entity) {
     if (entity.hasAttribute<attr::Sprite>()) {
         return new Sprite(entity);
     }
@@ -10,18 +8,15 @@ da::SpatialBase *Sprite::create(da::Entity &entity) {
     return NULL;
 }
 
-Sprite::Sprite(da::Entity &entity) :
-da::Spatial<Sprite>(entity),
+SpriteSpatial::SpriteSpatial(da::Entity &entity) :
+da::Spatial<SpriteSpatial>(entity),
 mTransform(entity.getAttribute<da::attr::Transform>()),
 mSprite(entity.getAttribute<attr::Sprite>()) {
     
 }
 
-void Sprite::draw(sf::RenderTarget &target,
+void SpriteSpatial::draw(sf::RenderTarget &target,
                                    sf::RenderStates states) const {
     states.transform *= mTransform.getTransform();    
     target.draw(mSprite, states);
-}
-
-
 }

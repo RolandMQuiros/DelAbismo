@@ -1,3 +1,6 @@
+#include <cctype>
+
+#include <algorithm>
 #include <fstream>
 #include "da/StringHelper.h"
 
@@ -34,6 +37,20 @@ std::string getFileText(const std::string &filename) {
                     std::istreambuf_iterator<char>());
         ifs.close();
     }
+    
+    return ret;
+}
+
+std::string toLower(const std::string &str) {
+    std::string ret = str;
+    std::transform(ret.begin(), ret.end(), ret.begin(), std::ptr_fun(tolower));
+    
+    return ret;
+}
+
+std::string toUpper(const std::string &str) {
+    std::string ret = str;
+    std::transform(ret.begin(), ret.end(), ret.begin(), std::ptr_fun(toupper));
     
     return ret;
 }

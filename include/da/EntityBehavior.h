@@ -12,9 +12,9 @@ public:
 protected:
     virtual void updateEntities(EntityGroup &entities);
     
-    virtual void begin(EntityGroup &entities);
+    virtual void beginUpdate(EntityGroup &entities);
     virtual void updateEntity(const EntityPtr &entity)=0;
-    virtual void end(EntityGroup &entities);
+    virtual void endUpdate(EntityGroup &entities);
 };
 
 }
